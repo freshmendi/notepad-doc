@@ -478,9 +478,7 @@ EOF
 
  
 
- 
-
- 
+  
 
 #启动nginx 并把nginx 加入开机启动
 
@@ -598,13 +596,9 @@ EOF
 
 chmod a+x /etc/init.d/nginx
 
- 
 
-chkconfig --add nginx
-
- 
+chkconfig --add nginx 
 
 chkconfig nginx on
 
- 
 
