@@ -1,0 +1,86 @@
+pipeline {
+    agent any
+    environment {
+		sendmail = 'yes'
+		recipients = 'xxxxx@qq.com,xxxxx@qq.com,xxxxx@qq.com'
+    }
+    stages {
+    }
+	post{             
+        success {
+            script {
+                if (sendmail == 'yes') {
+					emailext to: "${recipients}", body: '''
+							<html>
+								<body leftmargin="8" marginwidth="0" topmargin="8" marginheight="4" offset="0">
+									<table width="95%" cellpadding="0" cellspacing="0" style="font-size: 11pt; font-family: Tahoma, Arial, Helvetica, sans-serif">
+										<tr>
+											<td>
+												<br />
+												<b><font color="#0B610B">Build Information</font></b>
+												<hr size="2" width="100%" align="center" />
+											</td>
+										</tr>
+										<tr>
+											<td>
+												<ul> 
+													<li>JOB_NAME:${JOB_NAME}</li>
+													<li>BUILD_STATUS: <span style="color:green"> ${BUILD_STATUS}</span></li> 
+													<li>BUILD_NUMBER:${BUILD_NUMBER}  </li>
+													<li>CHANGES: ${CHANGES,showPaths=true,showDependencies=true,format="<pre><ul><li>COMMIT ID: %r</li><li>COMMIT USER: %a</li><li>COMMIT TIME : %d</li><li>COMMIT MSG: %m</li><li>COMMIT FILES: <br />%p</li></ul></pre>",pathFormat="         %p <br />"}
+													</li>
+												</ul>
+											</td>
+										</tr>
+									</table>
+								</body>
+							</html>
+						''', subject: '${JOB_NAME}' 
+                }
+            }
+        }
+        failure { 
+			emailext to: "${recipients}",body: '''
+					<!DOCTYPE html>
+					<html>
+						<head>
+							<meta charset="UTF-8">
+						</head>
+						<body leftmargin="8" marginwidth="0" topmargin="8" marginheight="4" offset="0">
+							<table width="95%" cellpadding="0" cellspacing="0" style="font-size: 11pt; font-family: Tahoma, Arial, Helvetica, sans-serif">
+								<tr>
+									<td>
+										<br />
+										<b><font color="#0B610B">Build Information</font></b>
+										<hr size="2" width="100%" align="center" />
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<ul> 
+											<li>JOB_NAME:${JOB_NAME}</li>
+											<li>BUILD_STATUS: <span style="color:green"> ${BUILD_STATUS}</span></li> 
+											<li>BUILD_NUMBER:${BUILD_NUMBER}  </li>
+											<li>CHANGES: ${CHANGES,showPaths=true,showDependencies=true,format="<pre><ul><li>COMMIT ID: %r</li><li>COMMIT USER: %a</li><li>COMMIT TIME : %d</li><li>COMMIT MSG: %m</li><li>COMMIT FILES: <br />%p</li></ul></pre>",pathFormat="         %p <br />"}
+											</li>
+										</ul>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<b><font color="#0B610B">BUILD_LOG:</font></b>
+										<hr size="2" width="100%" align="center" />
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<textarea cols="150" rows="30" readonly="readonly"style="font-family: Courier New">${BUILD_LOG}</textarea>
+									</td>
+								</tr>
+							</table>
+						</body>
+					</html>
+					''',subject: '${JOB_NAME}'
+        }
+    }
+}

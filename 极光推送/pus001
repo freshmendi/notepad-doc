@@ -1,0 +1,14 @@
+curl -l   --insecure -X POST -v https://api.jpush.cn/v3/push -H "Content-Type: application/json" -u "ffe20d137d680973f9044fac:99e8337a34a6f1487fcd7ff0" -d '{"platform":"all","audience":{"file":{"file_id":"ffe20d137d680973f9044fac-cc91d4b8-3eca-4afd-b8eb-eb3936f5d2e7"}},"notification":{"alert":"Hi,JPush !","android":{"extras":{"android-key1":"android-value1"}},"ios":{"sound":"sound.caf","badge":"+1","extras":{"ios-key1":"ios-value1"}}}}'
+
+
+"audience": {
+        "file": {"file_id":""}
+    }
+
+"audience": {"file": {"file_id":"ffe20d137d680973f9044fac-cc91d4b8-3eca-4afd-b8eb-eb3936f5d2e7"}}
+		
+
+
+curl --insecure -X POST -v https://api.jpush.cn/v3/push/file  -H "Content-Type: application/json" -u "ffe20d137d680973f9044fac:99e8337a34a6f1487fcd7ff0" -d '{"platform":"all","audience": {"file": {"file_id":"ffe20d137d680973f9044fac-cc91d4b8-3eca-4afd-b8eb-eb3936f5d2e7"}},"notification":{"alert":"Hi,JPush !","android":{"extras":{"android-key1":"android-value1"}},"ios":{"sound":"sound.caf","badge":"+1","extras":{"ios-key1":"ios-value1"}}}}'
+
+POST https://api.jpush.cn/v3/push/file

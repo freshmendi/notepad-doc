@@ -1,0 +1,18 @@
+select   M.pushtime , N.mlooktime ,M.dir  , M.file ,  M.title, M.content , N.ios_apns_target  as  ios目标, N.ios_apns_sent as ios成功 , N.jpush_target as  极光通道目标 , N.jpush_online_push as  极光通道成功 , N.android_pns_target  as  厂商通道目标 , N.android_pns_sent as 厂商通道成功 ,N.msg_id  from  
+(select  pushtime, H.dir,H.file ,H.msg_id ,H.title  , H.content from     $TBNAME01   H, 
+(select   max(最新的push时间)  as  pushtime  ,   dir  , file    from 
+(select  max(A.push_time)  as  最新的push时间 ,A.title  AS  推送标题,  A.content  AS  内容,A.dir ,A.file  ,A.msg_id  from  $TBNAME01   A  group by  A.dir,A.file ,A.msg_id  having  A.dir<>''  and  A.msg_id<> '' ) D  where  D.file like  '%$SYSDATE%'  group by D.dir ,D.file ) E  
+
+where H.push_time=E.pushtime  and  H.dir=E.dir and H.file =  E.file  group   by   H.dir  , H.file)  M
+
+,
+
+(select  msg_id, K.dir, K.file ,L.mlooktime,K.ios_apns_target,K.ios_apns_sent,K.jpush_target, K.jpush_online_push ,K.android_pns_target , K.android_pns_sent   from   $TBNAME02  K ,
+(select max(looktime) as mlooktime, dir, file  from  
+(select  max(look_time)  as  looktime, B.dir  , B.file    from  $TBNAME02 B   group by  B.dir  ,B.file,B.msg_id   having   B.file<>'' and B.msg_id <>''  and   B.file like  '%$SYSDATE%'   order by  B.dir  , B.file   ,B.look_time desc  ) F
+
+group by  F.dir  , F.file 
+)  L
+where  K.look_time = L.mlooktime and  K.dir =L.dir and K.file=L.file  group  by  L.dir  ,L.file  having  K.msg_id<> 'NULL' )  N   
+
+where  M.msg_id =N.msg_id   

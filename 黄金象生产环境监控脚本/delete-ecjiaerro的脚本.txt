@@ -1,0 +1,31 @@
+#！/bin/bash
+SYSDATE=$(date +%F)
+bakdate=$(date +%F-%H-%M)
+logpath=/data/mall/content/storages/logs/error-$SYSDATE.log
+#k=(`grep -rn  'HTTP/1.1" 400 |HTTP/1.1" 405 |HTTP/1.1" 413 |HTTP/1.1" 499 |HTTP/1.1" 502 |HTTP/1.1" 500 |HTTP/1.1" 509 '  /var/log/nginx/access.log  -n | cut -d  ":"    -f  2`)
+k=(`egrep  -i      -n   'Error|Server unreachable'  /data/mall/content/storages/logs/error-$SYSDATE.log|cut -d  ":"    -f  1`)
+echo  ${k[*]}
+echo  ${#k[@]}
+for(( i=0;i<${#k[@]};i++)) do
+#${#k[@]}获取数组长度用于循环
+echo  "i的数值"
+echo ${k[i]}
+echo  $i
+echo  "j的数值"
+j=$[${k[i]}-$i]
+j_before=$[$j-5]
+j_behand=$[$j+5]
+echo  $j_before
+echo  "第'$i'个的前后5行错误"  >> /tmp/11.txt
+if  [ "$j_before"  -lt   "1" ]
+then 
+sed -n  '1,'$j_behand'p'    /data/mall/content/storages/logs/error-$SYSDATE.log   >>   /usr/local/zabbix/scripts/logs/ejiaerror."$SYSDATE".log 
+echo  "---------------------------------"  >>  /usr/local/zabbix/scripts/logs/ejiaerror."$SYSDATE".log
+else 
+sed -n  ''$j_before','$j_behand'p'   /data/mall/content/storages/logs/error-$SYSDATE.log   >>    /usr/local/zabbix/scripts/logs/ejiaerror."$SYSDATE".log
+echo  "---------------------------------"  >>  /usr/local/zabbix/scripts/logs/ejiaerror."$SYSDATE".log
+fi
+echo  "'j的数值是：'$j''" 
+cp -r  /data/mall/content/storages/logs/error-$SYSDATE.log  /data/mall/content/storages/logs/error-$SYSDATE."$bakdate".log
+sed -i   ''$j'd'   /data/mall/content/storages/logs/error-$SYSDATE.log
+done;

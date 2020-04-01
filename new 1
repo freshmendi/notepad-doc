@@ -1,0 +1,13 @@
+#    environment {
+#                script {
+#                    Version = sh (script: "git rev-parse --short HEAD") 
+#                    echo "Version: ${Version}"
+#                }
+#    }
+    environment {
+                script {
+                    Version = sh (script: "git rev-parse --short HEAD") 
+                    echo "Version: ${Version}"
+                }
+    }
+	

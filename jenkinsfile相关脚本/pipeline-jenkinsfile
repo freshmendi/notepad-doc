@@ -1,0 +1,72 @@
+pipeline {
+    agent { docker 'maven:3.3.3' }
+    stages {
+        stage('build') {
+            steps {
+                sh 'mvn --version'
+            }
+        }
+    }
+}
+
+pipeline {
+    agent any
+    stages {
+        stage('Build') {
+            steps {
+                sh 'echo "Hello World"'
+                sh '''
+                    echo "Multiline shell steps works too"
+                    ls -lah
+                '''
+            }
+        }
+    }
+}
+
+
+
+再次回到 Jenkins , 如果需要的话再次登录并点击左边的 Open Blue Ocean 来访问 Jenkins的 Blue Ocean 界面。
+
+在 This job has not been run 消息框, 点击 Run, 然后快速的点击出现在右下方的 OPEN 链接观察Jenkins 运行你的流水线项目. 如果你不能点击 OPEN 链接, 点击 Blue Ocean 主界面的行来使用这一特性。
+Note: 完成第一次的运行你需要等几分钟。 在对你本地的 simple-python-pyinstaller-app Git 仓库进行clone后, Jenkins:
+
+最初将这个项目在代理上排队运行。
+
+下载 Python Docker 镜像并在 Docker上的容器中运行它.
+
+https://github.com/jenkins-docs/simple-python-pyinstaller-app.git
+
+在 Python 容器运行 Build 阶段 (定义在 Jenkinsfile`文件中)。 在这期间, Python使用 `py_compile 组件将你的Python应用的代码和它的 calc 库编译成字节码, 它被保存在 sources 工作区目录(在 Jenkins 的主目录里)。
+
+如果Jenkins编译Python应用成功，Blue Ocean界面会变成绿色 。
+
+input message: '升级到开发环境? (Click "yes" to continue)'
+
+
+
+appapi_path=/data/goldbag/appapi/logs
+
+mgrapi_path=/data/goldbag/mgrapi/logs
+
+bankapi_path=/data/goldbag/bankapi/logs
+
+manageservice_path=/data/goldbag/manageservice/logs
+
+orderservice_path=/data/goldbag/orderservice/logs
+
+currentservice_path=/data/goldbag/currentservice/logs
+
+scheduleservice_path=/data/goldbag/scheduleservice/logs
+
+payservice_path=/data/goldbag/payservice/logs
+
+allinpay_path=/data/goldbag/allinpay/logs
+
+metis_path=/data/goldbag/metis/logs
+
+
+
+
+
+

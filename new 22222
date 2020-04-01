@@ -1,0 +1,50 @@
+"Jenkinsfile" [只读] 20L, 404C
+pipeline {
+    agent any
+    stages {
+        stage('build') {
+            steps {
+                echo 'Hello World'
+                echo 'merget  003'
+                sh  '/usr/local/apache-maven-3.6.1/bin/mvn package'
+            }
+        }
+        stage('upload') {
+            steps {
+
+                sh  '/data/publish/vms/versionservice/cpToCentroll.sh'
+
+            }
+
+        }
+        stage('DepolyToDev') {
+            steps {
+
+                sh  '/data/publish/vms/versionservice/DepolyToDev.sh'
+
+            }
+
+        }
+        stage('DepolyToTest') {
+            steps {
+
+                sh  '/data/publish/vms/versionservice/cpToCentroll.sh'
+
+            }
+
+        }
+		stage("send mail test") {
+			steps{
+				script {
+					mail to: '1142040298@qq.com',
+                    subject: "Running Pipeline: ${currentBuild.fullDisplayName}",
+                    body: "Something is wrong with ${env.BUILD_URL}"
+				}
+			}
+		}
+
+
+		
+    }
+}
+

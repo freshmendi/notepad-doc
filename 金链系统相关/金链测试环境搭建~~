@@ -1,0 +1,32 @@
+export JAVA_HOME=/software/common/jdk/jdk1.8.0_101
+export JRE_HOME=${JAVA_HOME}/jre    
+export CLASSPATH=.:${JAVA_HOME}/lib:${JRE_HOME}/lib    
+export PATH=${JAVA_HOME}/bin:$PATH 
+
+docker run -d -p 8001:8001 --name=disconf yestechn-disconf:1208 /bin/bash -c "source /root/profile;sh /software/disconf_start.sh;tail -f /dev/null"
+
+
+ /root/profile
+
+
+docker run -d -p 20889:20889 --name=gateway yestechn-gateway:1231  /bin/bash -c "source /root/profile;sh /software/message_start.sh;tail -f /dev/null"
+
+20200103
+zookpeer:66.144-66.144-61.138
+nginx :66.137-61.139
+disconf:api:66.135-61.140
+rbac+icentordubbo： 66.147-61.141
+gateway：66.143-61.142
+cas+ucentorweb: 66.148-61.143
+transger: 66.150 -61.144
+smc: 66.149 -61.147
+engine：  66.142-61.148
+web：66.136-  61.149
+pagedesign： 66.153-61.150
+bigdata66.133- 61.151
+coconfig-66.146-61.152
+project: 66.154-61.153
+mysql: 66.141-61.154
+
+修改IP地址和域名: 两个部分：
+

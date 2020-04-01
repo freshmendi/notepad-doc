@@ -1,0 +1,69 @@
+#!/bin/bash
+###部署脚本
+##指定versionservice所在的主机
+host01=192.168.25.81
+host=($host01)
+##定义pass文件所在路径
+passfile=/data/publish/vms/versionservice/hostpass/dev/host01
+SYSDATE=$(date +%F)
+echo "当前系统日期： $SYSDATE "
+branch_name="${WORKSPACE##*_}"
+echo  "当前分支名称： $branch_name"
+Version_lastest=`git rev-parse --short HEAD`
+##定义程序以及启动和关闭脚本所在路径
+path_process=/data/appversion/versionservice
+echo "运行程序所在目录：$path_process"
+###从jenkins服务器上的master主干的versionservice_path.txt获取到最近一次发布的包的路径
+num=`grep    "$branch_name"   /data/publish/vms/versionservice/result/$branch_name/versionservice_path.txt   | wc  -l`
+path=`grep "$branch_name"  /data/publish/vms/versionservice/result/$branch_name/versionservice_path.txt  | sed -n "$num"p`
+echo  "当前分支的build结果记录文件的条数：$num"
+echo  "***升级包所在路径：$path"
+Version=`echo ${path##*/}`
+echo "***当前最新代码库版本Version_lastest:  $Version_lastest"
+echo  "***最后一次build打包的版本Version：$Version"
+###在程序升级之前，获取程序启动成功的关键字
+n=${#host[@]}
+echo  "程序分布的主机个数'$n'"
+for(( k=0;k<${#host[@]};k++)) do
+sshpass -f "$passfile" scp -r      $path/dist  root@${host[k]}:$path_process
+
+####初步判定程序升级是否ok
+
+success_status=`sshpass -f "$passfile"  ssh   root@${host[k]} "curl -sL -w "%{http_code}" "192.168.25.81" -o /dev/null"`
+
+echo  "程序重启之前，程序启动成功的关键字出现次数：$success_status_02"
+if  [ $success_status  = "200" ]
+then
+echo  '程序启动成功了'
+m=$[$k+1]
+echo 'dev环境第'$m'台(共'$n'台)主机：'${host[k]}'-versionserviceh升级成功'
+echo -e  "dev环境第'$m'台(共'$n'台)主机：${host[k]}-versionserviceh升级成功\n代码分支："$branch_name"\n当前代码版本Version_lastest："$Version_lastest"\n最后一次build的版本号Version："$Version"\nbuild程序包所在路径："$path"\n运行的程序所在路径："$path_process"" | mail -s "dev环境第'$m'台(共'$n'台)主机：${host[k]}-versionserviceh升级成功"  public@goldrock.cn,1142040298@qq.com
+else
+echo  '程序启动失败了'
+echo  'dev环境第'$m' 台(共'$n'台)主机：'${host[k]}'-versionserviceh升级失败'
+echo -e  "dev环境第$m台主机：${host[k]}-versionserviceh升级失败\n代码分支："$branch_name"\n当前代码版本Version_lastest："$Version_lastest"\b最后build的版本号Version："$Version"\n当前的程序包所在路径："$path"\n运行的程序所在路径："$path_process"" | mail -s "dev环境第'$m'台(共'$n'台)主机：${host[k]}-versionserviceh升级失败"  public@goldrock.cn,1142040298@qq.com
+fi
+done
+
+
+
+
+
+
+if  [ $success_status  = "200" ]
+then
+echo  '程序启动成功了'
+m=$[$k+1]
+echo 'dev环境第'$m'台(共'$n'台)主机：'${host[k]}'-web升级成功'
+echo -e  "dev环境第'$m'台(共'$n'台)主机：${host[k]}-web升级成功\n代码分支："$branch_name"\n当前代码版本Version_lastest："$Version_lastest"\n最后一次build的版本号Version："$Version"\nbuild程序包所在路径："$pa
+th"\n运行的程序所在路径："$path_process"" | mail -s "dev环境第'$m'台(共'$n'台)主机：${host[k]}-web升级成功"  public@goldrock.cn,1142040298@qq.com
+else
+echo  '程序启动失败了'
+echo  'dev环境第'$m' 台(共'$n'台)主机：'${host[k]}'-web升级失败'
+echo -e  "dev环境第$m台(共'$n'台)主机：${host[k]}-web升级失败\n代码分支："$branch_name"\n当前代码版本Version_lastest："$Version_lastest"\b最后build的版本号Version："$Version"\n当前的程序包所在路径："$path"\n
+运行的程序所在路径："$path_process"" | mail -s "dev环境第'$m'台(共'$n'台)主机：${host[k]}-web升级失败"  public@goldrock.cn,1142040298@qq.com
+fi
+done
+
+
+

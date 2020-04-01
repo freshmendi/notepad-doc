@@ -1,0 +1,119 @@
+获取msgid：
+
+cat push_result_jhwzc_01.txt  | sed 's/,/\n/g' | grep "msg_id" | sed 's/:/\n/g' | sed '1d' | sed 's/}//g' | sed 's/"//g'
+获取：发送的时间：
+
+stat  push_result_jhwzc_01.txt    | grep  Modify  |awk  '{print$2,$3}'
+
+jq获取发送详情： 然后存储mysql数据库：
+
+
+jq  '.[] | .android_pns| .fcm_detail| .sent'   1d.result
+
+
+
+
+参考安装mysql-client：
+centos7 仅安装mysql客户端_kramer_1711的博客-CSDN博客 https://blog.csdn.net/kramer_1711/article/details/90175575
+
+
+
+
+
+
+
+curl -l   --insecure -X POST -v https://api.jpush.cn/v3/push -H "Content-Type: application/json" -u "ffe20d137d680973f9044fac:99e8337a34a6f1487fcd7ff0" -d '{"platform":"all","audience":"all","notification":{"alert":"Hi,JPush !","android":{"extras":{"android-key1":"android-value1"}},"ios":{"sound":"sound.caf","badge":"+1","extras":{"ios-key1":"ios-value1"}}}}'
+
+curl  -XGET -u "ffe20d137d680973f9044fac:99e8337a34a6f1487fcd7ff0" https://api.jpush.cn/v3/files/ffe20d137d680973f9044fac-5baad0ea-ac04-4ac9-b2c3-ce5d11385bd7
+
+
+create_table_sql="create table IF NOT EXISTS ${TABLENAME}  (name varchar(20), id int(11) default 0 )"
+
+mysql -h${HOSTNAME} -P${PORT} -u${USERNAME} -p${PASSWORD} -e "${create_db_sql}"
+
+create table IF NOT EXISTS ${TBNAME01} (id   int  PRIMARY key auto_increment  ,  file_id   varchar(128),register_id varchar(64), push_time    datetime )
+
+每个文本文件添加换行符：
+
+echo -e   >>  
+
+删除文件空行：
+echo -e   >>   激活未注册/2020-01-06-1.txt
+sed  -i  '/^\s*$/d'  激活未注册/2020-01-06-1.txt
+
+
+##删除所有极光上传的文件：
+curl -X DELETE -u "ffe20d137d680973f9044fac:99e8337a34a6f1487fcd7ff0" https://api.jpush.cn/v3/files/
+查看极光上传的文件：
+curl -X GET -u "ffe20d137d680973f9044fac:99e8337a34a6f1487fcd7ff0" https://api.jpush.cn/v3/files
+
+获取到file_id：
+jq  '.[] '      |grep  file_id  | awk '{print$2}' |  sed 's/"//g' | sed 's/,//g'
+最终脚本: 
+shell:
+vim  de_file_id.sh
+
+
+#/bin/bash
+curl -X GET -u "ffe20d137d680973f9044fac:99e8337a34a6f1487fcd7ff0" https://api.jpush.cn/v3/files |  jq  '.[] '      |grep  file_id  | awk '{print$2}' |  sed 's/"//g' | sed 's/,//g' >  file_id.txt
+while read LINE;
+ do
+curl -X DELETE -u "ffe20d137d680973f9044fac:99e8337a34a6f1487fcd7ff0"  https://api.jpush.cn/v3/files/$LINE  ;
+done  < file_id.txt
+
+
+插入数据：记录regisid：
+INSERT INTO TBNAME02 VALUES (NULL, 'ffe20d137d680973f9044fac-cc91d4b8-3eca-4afd-b8eb-eb3936f5d2e7', '9007237614878103', '2020-01-05 15:28:43.43363962');
+
+
+获取到file——id 以及regis——id：
+curl --insecure -X POST -v https://api.jpush.cn/v3/push/file  -H "Content-Type: application/json" -u "ffe20d137d680973f9044fac:99e8337a34a6f1487fcd7ff0" -d '{"platform":"all","audience": {"file": {"file_id":"$file_id"}},"notification":{"alert":"Hi,JPush !","android":{"extras":{"android-key1":"android-value1"}},"ios":{"sound":"sound.caf","badge":"+1","extras":{"ios-key1":"ios-value1"}}}}' > push_result_jhwzc_01.txt
+
+
+获取mesgid的详细信息：
+
+54043235400385480
+
+
+jpush_online_push =`jq  '.[] | .jpush|.online_push '  jhwzc_01.result`
+
+echo  "极光通道在线推送数：  $jpush_online_push "
+jpush_received  =`jq  '.[] | .jpush|.received  '  jhwzc_01.result`
+
+echo  "极光通道推送送达数：  $jpush_received "
+
+jpush_click   =`jq  '.[] | .jpush|.click  '  jhwzc_01.result`
+
+echo  "极光通道用户点击数：  $jpush_click "
+
+
+###厂商渠道：
+android_pns_target=`jq  '.[] | .jpush|.pns_target '  jhwzc_01.result`
+echo  "通过厂商通道推送目标数：  $android_pns_target "
+
+android_pns_sent=`jq  '.[] | .jpush|.pns_sent '  jhwzc_01.result`
+echo  "推送到厂商通道成功数：  $android_pns_target "
+
+
+
+
+create_table_sql="create table IF NOT EXISTS    ${TBNAME02}   (id  int  PRIMARY key auto_increment  ,msg_id    varchar(64),ios_apns_target  varchar(10)  , ios_apns_sent  varchar(10) ,ios_apns_received  varchar(10) ,ios_apns_click  varchar(10) ,jpush_target  varchar(10) ,jpush_online_push  varchar(10) ,jpush_received  varchar(10) ,jpush_click   varchar(10) ,android_pns_target   varchar(10) ,android_pns_sent   varchar(10) ,look_time    datetime )"
+mysql -h${HOSTNAME} -P${PORT} -u${USERNAME} -p${PASSWORD} ${DBNAME} -e "${create_table_sql}"
+
+
+insert_sql="INSERT INTO ${TBNAME02}   VALUES (NULL, '$msg_id','$ios_apns_target' , '$ios_apns_sent','$ios_apns_received','$ios_apns_click', '$jpush_target','$jpush_online_push','$jpush_received','$jpush_click','$android_pns_target','$android_pns_sent',now())"
+mysql -h${HOSTNAME} -P${PORT} -u${USERNAME} -p${PASSWORD} ${DBNAME} -e "${insert_sql}"
+
+done
+
+
+
+
+
+
+
+
+
+
+
+

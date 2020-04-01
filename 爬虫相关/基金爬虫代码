@@ -1,0 +1,8 @@
+import requests
+r = requests.get('http://fund.eastmoney.com/js/fundcode_search.js')
+print(r.text)
+
+
+cont = re.findall('var r = (.*])', r.text)[0]  # 提取list
+ls = json.loads(cont)  # 将字符串个事的list转化为list格式
+all_fundCode = pd.DataFrame(ls, columns=['基金代码', '基金名称缩写', '基金名称', '基金类型', '基金名称拼音'])  # list转为DataFrame

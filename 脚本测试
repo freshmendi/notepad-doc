@@ -1,0 +1,28 @@
+#!/bin/bash
+if [ $# -ne 1 ];then
+ echo "Usage:$0 $jhwzc03"
+ exit 1
+fi
+file=$1
+if [ ! -f $file ];then
+ echo "the $file is not a file"
+ exit 2
+fi
+count=0
+while read line   #使用read命令循环读取文件内容，并将读取的文件内容赋值给变量line
+do
+  let count++
+  echo "$count $line"
+done <$file      #“done <$file”将整个while循环的标准输入指向文件$file
+echo -e "\ntotle $count lines read"
+exit 0
+
+
+
+
+
+
+
+
+
+

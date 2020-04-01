@@ -1,0 +1,44 @@
+#！/bin/bash
+#!/bin/bash
+logpath=/var/log/nginx/access.log
+SYSDATE=$(date +%F)
+bakdate=$(date +%F-%H-%M)
+a="HTTP/1.1\" 400"
+b="HTTP/1.1\" 405"
+c="HTTP/1.1\" 413"
+d="HTTP/1.1\" 499"
+e="HTTP/1.1\" 502"
+f="HTTP/1.1\" 500"
+g="HTTP/1.1\" 509"
+error1="\"GET\ /metis/put/event*\ HTTP/1.1\""
+error2="\"GET\ /metis/put/event*\ HTTP/1.0\""
+error3="\"POST\ /sites/m/index.php?m=user&c=index&a=wxconfig\ HTTP/1.1"\"
+error4="\"GET\ /metis/put/eventBatch\ HTTP/1.1\""
+nginxerror=$(egrep    "$b|$c|$e|$f|$g" $logpath | egrep -v "$error1" | egrep -v "$error2" |grep -v "$error3" | grep -v "$error4")
+k=(`egrep  -i      -n   "$b|$c|$e|$f|$g" $logpath | egrep -v "$error1" | egrep -v "$error2" |grep -v "$error3" | grep -v "$error4"   |cut -d  ":"    -f  1`)
+#k=(`grep -rn  'HTTP/1.1" 400 |HTTP/1.1" 405 |HTTP/1.1" 413 |HTTP/1.1" 499 |HTTP/1.1" 502 |HTTP/1.1" 500 |HTTP/1.1" 509 '  /var/log/nginx/access.log  -n | cut -d  ":"    -f  2`)
+echo  ${k[*]}
+echo  ${#k[@]}
+for(( i=0;i<${#k[@]};i++)) do
+#${#k[@]}获取数组长度用于循环
+echo  "i的数值"
+echo ${k[i]}
+echo  $i
+echo  "j的数值"
+j=$[${k[i]}-$i]
+j_before=$[$j-5]
+j_behand=$[$j+5]
+echo  $j_before
+echo  "第'$i'个的前后5行错误"  >> /tmp/11.txt
+if  [ "$j_before"  -lt   "1" ]
+then 
+sed -n  '1,'$j_behand'p'    /var/log/nginx/access.log    >>   /usr/local/zabbix/scripts/logs/nginxerror."$SYSDATE".log
+echo  "---------------------------------"  >>  /usr/local/zabbix/scripts/logs/nginxerror."$SYSDATE".log
+else 
+sed -n  ''$j_before','$j_behand'p'  /var/log/nginx/access.log    >>   /usr/local/zabbix/scripts/logs/nginxerror."$SYSDATE".log
+echo  "---------------------------------"  >> /usr/local/zabbix/scripts/logs/nginxerror."$SYSDATE".log
+fi
+echo  "'j的数值是：'$j''" 
+cp  -r  /var/log/nginx/access.log  /var/log/nginx/access.log."$bakdate".bak
+##sed -i   ''$j'd'     /var/log/nginx/access.log
+done;

@@ -1,0 +1,116 @@
+###生产环境一键重启脚本：
+####指定hosts文件：
+export zookeeper=192.168.66.140
+export disconf=192.168.66.160
+export nginx=192.168.66.158
+export api=192.168.66.160
+export rbac=192.168.66.152
+export ucenterdubbo=192.168.66.152
+export gateway=192.168.66.167
+export cas=192.168.66.151	
+export ucenterweb=192.168.66.151
+export transfer=192.168.66.170
+export smc=192.168.66.166
+export engine=192.168.66.161
+export web=192.168.66.164
+export pagedesign=192.168.66.165
+export bigdata=192.168.66.159
+export coconfig=192.168.66.139
+export project=192.168.66.138
+前三个需要重启容器：
+##重启容器程序:
+#####zookeeper启动##
+
+sshpass   -p   '2018@HT' ssh   root@$zookeeper     'docker exec  zookeeper_04  bash -c  "cd /software/zookeeper/bin  && nohup   ./killzookpeer.sh" ' ;
+sleep 10s;
+sshpass   -p   '2018@HT' ssh   root@$zookeeper     'docker exec  zookeeper_04  bash -c  "cd /software/zookeeper/bin  && nohup   ./startzook.sh"  ';
+
+sleep 10s;
+echo '1-zookeeper启动成功';
+#######disconf启动####
+sshpass   -p   '2018@HT' ssh   root@$disconf     'docker exec  disconf  bash -c  "cd /software/project/paas/paas_disconf/bin  && nohup   ./killdisconf.sh" ' ;
+sleep 10s;
+sshpass   -p   '2018@HT' ssh   root@$disconf     'docker exec  disconf  bash -c  "cd /software/project/paas/paas_disconf/bin   && sh startup.sh"  ';
+sleep 20s;
+echo '2-disconf启动成功';
+####nginx启动####
+sshpass   -p   '2018@HT' ssh   root@$nginx     'docker exec  nginx_07  bash -c  "killall nginx" ';
+sleep 10s;
+sshpass   -p   '2018@HT' ssh   root@$nginx     'docker exec  nginx_07  bash -c  "nginx"  ';
+sleep 20s;
+echo '3-nginx启动成功';
+
+####api启动###
+sshpass   -p   '2018@HT' ssh   root@$api     'docker exec  api  bash -c  "cd /software/project/paas/paas_api/bin   && nohup ./killapi.sh" ' ;
+sleep 10s;
+sshpass   -p   '2018@HT' ssh   root@$api     'docker exec  api  bash -c  "cd /software/project/paas/paas_api/bin   && sh startup.sh"  ';
+sleep 20s;
+echo '4-api启动成功';
+
+###rbac启动###
+sshpass   -p   '2018@HT' ssh   root@$rbac     'docker exec  rbac  bash -c  "cd /  && nohup ./restartrac.sh"'
+sleep 20s;
+echo '5-rbac启动成功';
+
+###ucenterdubbo启动## ？？
+sshpass   -p   '2018@HT' ssh   root@$ucenterdubbo     'docker exec  ucenterdubbo  bash -c  "cd /  && nohup ./restartucenterdubbo.sh" ' ;
+sleep 20;
+echo '6-ucenterdubbo启动成功';
+
+#########gateway## ？？？？
+sshpass   -p   '2018@HT' ssh   root@$gateway    'docker exec  gateway  bash -c  "cd /   && nohup ./killgateway.sh" ' ;
+sshpass   -p   '2018@HT' ssh   root@$gateway    'docker exec  gateway  bash -c  "cd /software/project/message/hst-message-gateway-3.0-beta/bin    && nohup  ./start.sh" ' ;
+sleep 20s;
+echo '7-gateway启动成功';
+########cas##
+sshpass   -p   '2018@HT' ssh   root@$cas    'docker exec  cas  bash -c  "cd /   && nohup ./killcas.sh" ' ;
+sshpass   -p   '2018@HT' ssh   root@$cas    'docker exec  cas  bash -c  "cd /software/project/paas/cas/bin   && nohup  ./startup.sh" ' ;
+sleep 20s;
+echo '8-cas启动成功';
+##############	##
+sshpass   -p   '2018@HT' ssh   root@$ucenterweb    'docker exec  ucenterweb  bash -c  "cd /   && nohup ./killucenterweb.sh" ' ;
+sshpass   -p   '2018@HT' ssh   root@$ucenterweb    'docker exec  ucenterweb  bash -c  "cd /software/project/paas/ucenter/bin && nohup  ./startup.sh" ' ;
+sleep 20s;
+echo '9-ucenterweb启动成功';
+#######transfer##
+sshpass   -p   '2018@HT' ssh   root@$transfer    'docker exec  transfer  bash -c  "cd /   && nohup ./killtransfer.sh" ' ;
+sshpass   -p   '2018@HT' ssh   root@$transfer    'docker exec  transfer  bash -c  "cd /software/project/paas/transfer/bin  && nohup  ./startup.sh" ' ;
+sleep 20s;
+echo '10-transfer启动成功';
+######smc###
+sshpass   -p   '2018@HT' ssh   root@$smc    'docker exec  smc  bash -c  "cd /   && nohup ./killsmc.sh" ' ;
+sshpass   -p   '2018@HT' ssh   root@$smc    'docker exec  smc  bash -c  "cd /software/project/paas/smc/bin && nohup  ./startup.sh" ' ;
+sleep 20s;
+echo '11-smc启动成功';
+######engine###
+sshpass   -p   '2018@HT' ssh   root@$engine    'docker exec  engine  bash -c  "cd /   && nohup ./killengine.sh" ' ;
+sshpass   -p   '2018@HT' ssh   root@$engine    'docker exec  engine  bash -c  "cd /software/project/paas/pass_enginer/hst-paas-data/bin && nohup  ./start.sh" ' ;
+sleep 30s;
+echo '12-engine启动成功';
+######web###
+sshpass   -p   '2018@HT' ssh   root@$web    'docker exec  web  bash -c  "cd /   && nohup ./killweb.sh" ' ;
+sshpass   -p   '2018@HT' ssh   root@$web    'docker exec  web  bash -c  "cd /software/project/paas/paas_web/bin && nohup  ./startup.sh" ' ;
+sleep 30s;
+echo '13-web启动成功';
+######pagedesign###
+sshpass   -p   '2018@HT' ssh   root@$pagedesign    'docker exec  pagedesign  bash -c  "cd /   && nohup ./killpagedesign.sh" ' ;
+sshpass   -p   '2018@HT' ssh   root@$pagedesign    'docker exec  pagedesign  bash -c  "cd /software/project/pagedesign/bin && nohup  ./startup.sh" ' ;
+sleep 30s;
+echo '14-pagedesign启动成功';
+######bigdata###
+sshpass   -p   '2018@HT' ssh   root@$bigdata    'docker exec  bigdata  bash -c  "cd /   && nohup ./killbigdata.sh" ' ;
+sshpass   -p   '2018@HT' ssh   root@$bigdata    'docker exec  bigdata  bash -c  "cd /software/dplatform/dubbo_bigdata/hst-bigdata-data-2.0.0/bin && nohup  ./start.sh" ' ;
+sleep 30s;
+echo '15-bigdata启动成功';
+######coconfig###
+sshpass   -p   '2018@HT' ssh   root@$coconfig    'docker exec  coconfig  bash -c  "cd /   && nohup ./killcoconfig.sh" ' ;
+sshpass   -p   '2018@HT' ssh   root@$coconfig    'docker exec  coconfig  bash -c  "cd /software/project/coconfig/hst-project-coconfig-main-1.0.0/bin && nohup  ./start.sh" ' ;
+sleep 30s;
+echo '16-coconfig启动成功';
+######project###
+sshpass   -p   '2018@HT' ssh   root@$project    'docker exec  goldchain  bash -c  "cd /   && nohup ./killproject.sh" ' ;
+sshpass   -p   '2018@HT' ssh   root@$project    'docker exec  goldchain  bash -c  "cd /software/project/paas/paas_api/bin&& nohup  ./startup.sh" ' ;
+sleep 120s;
+echo '17-project启动成功';
+
+

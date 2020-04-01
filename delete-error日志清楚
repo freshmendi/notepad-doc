@@ -1,0 +1,81 @@
+#!/bin/bash
+SYSDATE=$(date +%F)
+bakdate=$(date +%F-%H-%M)
+echo  $bakdate
+###error_path=/usr/local/zabbix/scripts/logs/error.$bakdate.log
+###goldba服务器脚本
+appapi=/data/goldbag/appapi/logs/appapi.$SYSDATE.log
+
+mgrapi=/data/goldbag/mgrapi/logs/mgrapi.$SYSDATE.log
+
+bankapi=/data/goldbag/bankapi/logs/bankapi.log
+
+manageservice=/data/goldbag/manageservice/logs/manageservice.$SYSDATE.log
+
+orderservice=/data/goldbag/orderservice/logs/orderservice.$SYSDATE.log
+
+currentservice=/data/goldbag/currentservice/logs/currentservice.$SYSDATE.log
+
+scheduleservice=/data/goldbag/scheduleservice/logs/scheduleservice.$SYSDATE.log
+
+payservice=/data/goldbag/payservice/logs/payservice.$SYSDATE.log
+
+allinpay=/data/goldbag/allinpay/logs/allinpay.$SYSDATE.log
+
+metis=/data/goldbag/metis/logs/metis.$SYSDATE.log
+
+###61.129 metis服务器脚本
+
+##metis=/data/count/metis/logs/metis.$SYSDATE.log
+
+#appmetisapppi=/data/count/metisApp/logs/metisappservice.$SYSDATE.log
+
+logpath=($appapi $mgrapi $bankapi $manageservice $orderservice $currentservice $scheduleservice $payservice $allinpay $metis)
+###需要清除的log路径
+#log="$metis"
+##需要备份的log路径，加上日期的时间戳
+#logbak="$log"."$bakdate".bak
+echo  $logbak
+##每次执行脚本之前清空tmptxt文件内容，用于存放新的错误行和日志路径
+echo  ''  >  /usr/local/zabbix/scripts/logs/tmp.txt
+##############判定是否有error日志，有的则备份日志，并且删除相关行#########
+###按照logpath数组元素，去检索日志
+for(( i=0;i<${#logpath[@]};i++)) do
+#${#logpath[@]}获取数组长度用于循环
+goldbagerror=$(egrep -n  -i  -m  1    'GR999999|Exception'   ${logpath[i]} | grep -v "java.lang.NullPointerException: null" |grep -v "Request method 'GET' not supported" | grep -iv "Fail to saved" | grep -v "Fail to save" | grep -v "fail to be saved" ) 
+#####获取${logpath[i]}的日志路径。添加到grep到error的行的前面
+echo  "${logpath[i]}:$goldbagerror"  >>  /usr/local/zabbix/scripts/logs/tmp.txt
+echo  $goldbagerror 
+if [ "$goldbagerror" != "" ]
+then
+k=(`grep  "${logpath[i]}"   /usr/local/zabbix/scripts/logs/tmp.txt |cut -d  ":"    -f  2 `)
+echo  ${k[*]}
+for(( l=0;l<${#k[@]};l++)) do
+#${#k[@]}获取数组长度用于循环
+echo  "k的数值"
+echo ${k[l]}
+echo  $l
+echo  ${logpath[i]}
+echo  "j的数值"
+j=$[${k[l]}-$l]
+j_before=$[$j-5]
+j_behand=$[$j+5]
+echo  $j_before
+echo  "'${logpath[i]}'的第'$i'个的前后5行错误"     >>   /usr/local/zabbix/scripts/logs/"$bakdate".log
+if  [ "$j_before"  -lt   "1" ]
+then
+sed -n  '1,'$j_behand'p'    ${logpath[i]}  >>    /usr/local/zabbix/scripts/logs/"$bakdate".log
+echo  "---------------------------------"  >>   /usr/local/zabbix/scripts/logs/"$bakdate".log
+else
+#定义logbk的路径和名称
+sed -n  ''$j_before','$j_behand'p'  ${logpath[i]}   >>   /usr/local/zabbix/scripts/logs/"$bakdate".log
+echo  "---------------------------------"  >>  /usr/local/zabbix/scripts/logs/"$bakdate".log
+fi
+logbak="${logpath[i]}"."$bakdate".bak
+cp -r  ${logpath[i]}  $logbak
+sed -i   ''$j'd'  ${logpath[i]}
+done;
+else  
+echo "没有错误日志"
+fi  
+done;

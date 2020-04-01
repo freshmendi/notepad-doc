@@ -1,0 +1,78 @@
+select  f_unique_flag,f_phone,f_regid,min(f_launch_time) as f_first_time,
+max(f_launch_time) as f_last_time
+from  (select f_unique_flag,
+parsejsonstr(f_additional,'phone','string') as f_phone,
+parsejsonstr(f_additional,'registrationID','string') as f_regid ,
+f_launch_time
+from  t_event 
+where   f_unique_flag  =  'v_f_unique_flag' )   group by  f_unique_flag,f_phone,f_regid
+
+
+
+####通过游标逐行输出v_f_unique_flag
+
+
+
+Declare
+          v_ename   varchar2(50);
+          Cursor v_f_unique_flag is    select f_unique_flag from t_event
+where to_char(f_launch_time,'yyyy-mm-dd')>='2019-11-25' 
+and to_char(f_launch_time,'yyyy-mm-dd')<='2019-12-01'
+group by f_unique_flag;
+Begin
+          open v_f_unique_flag;
+          loop
+              fetch v_f_unique_flag  into    v_ename;
+              exit when v_f_unique_flag%notfound;
+              dbms_output.put_line(v_ename );
+          end loop;
+          close v_f_unique_flag;
+End;
+
+
+
+
+####
+Declare
+          v_ename   varchar2(50);
+          Cursor v_f_unique_flag is    select f_unique_flag from t_event
+where to_char(f_launch_time,'yyyy-mm-dd')>='2019-11-25' 
+and to_char(f_launch_time,'yyyy-mm-dd')<='2019-12-01'
+group by f_unique_flag;
+Begin
+          open v_f_unique_flag;
+          loop
+              fetch v_f_unique_flag  into    v_ename;
+              exit when v_f_unique_flag%notfound;
+              dbms_output.put_line(v_ename );
+			  select  f_unique_flag,f_phone,f_regid,min(f_launch_time) as f_first_time,
+max(f_launch_time) as f_last_time
+
+from  (select f_unique_flag,
+parsejsonstr(f_additional,'phone','string') as f_phone,
+parsejsonstr(f_additional,'registrationID','string') as f_regid ,
+f_launch_time
+from  t_event 
+where   f_unique_flag  =  v_f_unique_flag)  group by  f_unique_flag,f_phone,f_regid;
+			  
+          end loop;
+          close v_f_unique_flag;
+End;
+    
+	cursor.execute("select f_unique_flag from t_event
+where to_char(f_launch_time,'yyyy-mm-dd')>='2019-11-25' 
+and to_char(f_launch_time,'yyyy-mm-dd')<='2019-12-01'
+group by f_unique_flag;")  #执行sql语句
+data = cursor.fetchone()        #获取一条数据
+print(data)     #打印数据
+cursor.close()  #关闭游标
+con.close()     #关闭数据库连接
+ oracle数据库的操作和mysql的pymysql操作基本相
+ 
+ 
+	
+	
+Path=C:\Windows\system32\;C:\Windows\;C:\Windows\System32\Wbem\;C:\Windows\System32\WindowsPowerShell\v1.0\\;C:\Windows\System32\OpenSSH\\;C:\Program Files\Pandoc\\;C:\Program Files\Git\cmd\;C:\Users\zhangdi\AppData\Local\Programs\Python\Python37\Scripts\\;C:\Users\zhangdi\AppData\Local\Programs\Python\Python37\\;C:\Users\zhangdi\AppData\Local\Microsoft\WindowsApps\;\;C:\Program Files\JetBrains\PyCharm Community Edition 2019.2.2\bin\;
+
+	
+

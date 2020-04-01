@@ -1,0 +1,139 @@
+#!/usr/bin/env python
+#coding=utf-8
+"""
+__author__ = '戴儒锋'
+使用elasticsearch模块获取昨天某站点访问日志的所有数据
+elasticsearch模块中指定使用scroll用来避免深度分页查找数据时的性能消耗
+scan（扫描）搜索类型是和scroll（滚屏）API一起使用来从Elasticsearch里高效地取回巨大数量的结果而不需要付出深分页的代价。
+size被应用到每一个分片上，所以我们在每个批次里最多或获得size * number_of_primary_shards（size*主分片数）
+scroll= "1m" 指定快照时间为1分钟
+"""
+import datetime
+import json
+import pymysql
+import re
+from elasticsearch import Elasticsearch
+import pymysql
+db = pymysql.connect(host='192.168.25.81', user='root', password='cshj', port=3306, db='test')
+cursor = db.cursor()
+
+# 格式为：2016.7.19 的昨日日期
+yesterday = (datetime.datetime.now()  + datetime.timedelta(days = -15)).strftime("%Y.%m.%d")
+print(yesterday)
+# 格式为：2016-7-19 的昨日日期
+filter_yesterday = (datetime.datetime.now()  + datetime.timedelta(days = -15)).strftime("%Y-%m-%d")
+print(filter_yesterday)
+# 格式为：2016.7.18 的前天日期
+before_yesterday = (datetime.datetime.now()  + datetime.timedelta(days = -16)).strftime("%Y.%m.%d")
+print(before_yesterday)
+# 请求elasticsearch节点的url
+url = "http://elastic:changeme@192.168.25.122:9200/"
+# 使用的索引，因日期时区问题，所以要指定昨天和前天的索引名
+index_name = "logstash-nginx-access-{date},logstash-nginx-access-{b_date}".format(date=yesterday,b_date=before_yesterday)
+print(index_name)
+# 实例化Elasticsearch类，并设置超时间为120秒，默认是10秒的，如果数据量很大，时间设置更长一些
+es = Elasticsearch(url,timeout=120)
+# DSL查询语法，在下面es.search使用
+data = {
+    "size": 10000,   #指定每个分片最大返回的数据量，可根据日志量进行设置
+
+    #"_source": {"includes": ["request","@timestamp","method","status","geoip"]},
+    "query" : {
+        "bool":{
+            # 指定要匹配的字符，这里是查找所有数据
+            "must" : {"match_all":{}},
+            # 过滤，指定时间范围，这里设置成昨天0点到24点，代码上||-8h，因为ELK用的是UTC时间，跟北京时间误差8小时，所以要减8小时，这就是日志里的北京时间了
+            "filter" : {
+                "range" : { "@timestamp" : {
+                   ## "gt" : "{date}T00:00:00||-8h".format(date=filter_yesterday),
+                    "gt": "{date}T00:00:00||-8h".format(date=filter_yesterday),
+                    "lt" : "{date}T23:59:59||-8h".format(date=filter_yesterday),
+                    }
+                }
+            }
+        }
+    }
+}
+# 设置要过滤返回的字段值，要什么字段，就在这里添加，这样可以节约返回的数据量（带宽，内存等）
+print(data)
+def main():
+    # 指定search_type="scan"模式，并返回_scroll_id给es.scroll获取数据使用
+    res = es.search(
+            index=index_name,
+            body=data,
+        search_type='dfs_query_then_fetch',
+        scroll="1m"
+        )
+    print(res)
+  #  scrollId=res["_scroll_id"]  # 获取scrollID
+    ###print(scrollId)
+    #response=es.scroll(scroll_id=scrollId)
+   # print (agent) # 打印获取到的日志数量
+    #print(res['hits']['hits'])
+    for hit in res['hits']['hits']:
+        print (hit)
+        if ('request' in hit['_source']):
+
+            request1 = json.loads((json.dumps((hit['_source']))))['request']
+            #requests = eval("'{}'".format(request1))
+            requests = re.sub(r'\'', '', request1)
+            print(request1)
+            print(requests)
+        else :
+            ###request为空
+            requests = "null"
+            print(requests)
+        if('@timestamp' in hit['_source'] ):
+            timestamp1 = json.loads((json.dumps((hit['_source']))))['@timestamp']
+            timestamp2 = re.sub(r'T', ' ', timestamp1)
+            timestamp3 = re.sub(r'Z', '', timestamp2)
+            timestamp3 = re.sub(r'\.[A-Z0-9]+', '', timestamp3)
+            print(timestamp3)
+            timestamps = datetime.datetime.strptime(timestamp3, "%Y-%m-%d %H:%M:%S")
+            print(timestamps)
+            #print(type(timestamps))
+        else:
+###timestamps为空
+            timestamps = "null"
+            print(timestamps)
+        geoip = json.loads((json.dumps((hit['_source']))))['geoip']
+        #print(hit)
+        print(geoip)
+        latitude001=geoip.get('latitude')
+        print(latitude001)
+        ips=geoip.get('ip')
+        #print(ips)
+        longitudes=geoip.get('longitude')
+        print(longitudes)
+        if ('method' in hit['_source']):
+
+            methods = json.loads((json.dumps((hit['_source']))))['method']
+            #requests = eval("'{}'".format(request1))
+            print(methods)
+        else :
+            ###request为空
+            methods = "null"
+            print(methods)
+        if ('status' in hit['_source']):
+            statuss = json.loads((json.dumps((hit['_source']))))['status']
+            #requests = eval("'{}'".format(request1))
+            print(statuss)
+        else :
+            ###request为空
+            statuss = "null"
+            print(statuss)
+ #       sql = "insert into test (request ,ip, latitude,timestamp) values('%s','%s', '%s','%s')" % (requests,methods,statuss,ips,latitude001,latitude001,timestamps)
+        sql = "insert into test (request ,method,status,ip, latitude,longitude,timestamp) values('%s','%s', '%s', '%s','%s', '%s','%s')" % (requests, methods, statuss, ips, latitude001, longitudes,timestamps)
+
+        sql2 = "select *  from  test;"
+        cursor.execute(sql)
+        db.commit()
+        cursor.execute(sql2)
+        r = cursor.fetchall()
+        #print(r)
+    cursor.close()
+    db.close()
+if __name__ == "__main__":
+    main()
+
+

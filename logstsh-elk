@@ -1,0 +1,68 @@
+input {
+   beats {
+        port => "5044"
+    }
+}
+filter {
+ if "nginx" in [tags]{
+ grok {
+        match => { "message" => "%{NGINXACCESS}" }
+     }
+   urldecode {
+       all_fields => true
+   }
+
+   date {
+        locale => "en"
+        match => ["timestamp" , "dd/MMM/YYYY:HH:mm:ss Z"]
+
+   }
+    geoip {
+        source => "remote_ip"
+        target => "geoip"
+        database => "/home/elk/logstash-5.2.2/data/GeoLite2-City.mmdb"
+        add_field => [ "[geoip][coordinates]", "%{[geoip][longitude]}" ]
+        add_field => [ "[geoip][coordinates]", "%{[geoip][latitude]}" ]
+    }
+    mutate {
+       convert => [ "[geoip][coordinates]", "float" ]
+        convert => [ "response","integer" ]
+        convert => [ "bytes","integer" ]
+        replace => { "type" => "nginx_access" }n
+        remove_field => "message"
+  }
+   }
+ else if   "goldbag" in [tags] {
+ grok {
+        match => {
+             #message => "\[(?<time>[0-9]{4}\-[0-9]{2}\-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}\,[0-9]+)\] .*$"
+             message => "\[(?<time>[0-9]{4}\-[0-9]{2}\-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}\,[0-9]+)\] \[(?<level>[A-Z]+)\] \[(?<Thread>.*)\] \[(?<Class>.*)\] (?<Message>.*)"
+        }
+        remove_field => ["message", "beat.version", "_type", "_id", "_score"]
+    }
+    date {
+        match => ["time", "yyyy-MM-dd HH:mm:ss,SSS"]
+        remove_field => ["time"]
+    }
+}
+}
+output {
+ if "nginx" in [tags] {
+    elasticsearch {
+        hosts => ["192.168.25.122:9200"]
+        index => "logstash-nginx-access-%{+YYYY.MM.dd}"
+    }
+    stdout {codec => rubydebug}
+}
+
+else  if   "goldbag" in [tags] {
+elasticsearch {
+
+        hosts => ["192.168.25.122:9200"]
+
+        index => "logstash-goldbag--%{+YYYY.MM.dd}"
+
+    }
+    stdout {codec => rubydebug}
+}
+}

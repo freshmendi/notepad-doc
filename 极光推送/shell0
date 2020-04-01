@@ -1,0 +1,51 @@
+#!/bin/bash
+
+HOSTNAME="192.168.25.81"  #数据库信息
+
+PORT="3306"
+
+USERNAME="root"
+
+PASSWORD="cshj"
+DBNAME="TESTDB"  #数据库名称
+
+TBNAME01="record" #发送记录表格
+TBNAME02="restult" ##发送结果表格
+
+##create_db_sql="create database IF NOT EXISTS ${DBNAME}"
+#创建数据库
+
+create_db_sql="create database IF NOT EXISTS ${DBNAME}"
+
+mysql -h${HOSTNAME} -P${PORT} -u${USERNAME} -p${PASSWORD} -e "${create_db_sql}"
+
+################发送时间####
+curl -F "filename=@激活未注册/2020-01-06-1.txt" https://api.jpush.cn/v3/files/registration_id -u "ffe20d137d680973f9044fac:99e8337a34a6f1487fcd7ff0" >  jhwzc-01.txt
+FILENAME="激活未注册/2020-01-06-1.txt"
+echo $FILENAME
+time=`stat  jhwzc-01.txt    | grep  Modify  |awk  '{print$2,$3}'`
+file_id=`cat jhwzc-01.txt | sed 's/,/\n/g' | grep "file_id"  | sed 's/:/\n/g' | sed '1d' |  sed 's/}//g'|sed 's/"//g'`
+file_name=jhwzc-01
+echo  $time
+echo  $file_id
+
+###根据file_id推送jpush
+curl --insecure -X POST -v https://api.jpush.cn/v3/push/file  -H "Content-Type: application/json" -u "ffe20d137d680973f9044fac:99e8337a34a6f1487fcd7ff0" -d '{"platform":"all","audience": {"file": {"file_id":"$file_id"}},"notification":{"alert":"Hi,JPush !","android":{"extras":{"android-key1":"android-value1"}},"ios":{"sound":"sound.caf","badge":"+1","extras":{"ios-key1":"ios-value1"}}}}' > push_result_jhwzc_01.txt
+##获取到msgid
+msg_id=`cat push_result_jhwzc_01.txt  | sed 's/,/\n/g' | grep "msg_id" | sed 's/:/\n/g' | sed '1d' | sed 's/}//g' | sed 's/"//g'`
+echo   msg_id:$msg_id
+push_time=`stat  push_result_jhwzc_01.txt    | grep  Modify  |awk  '{print$2,$3}'`
+echo  push_time:$push_time
+#创建表
+create_table_sql="create table IF NOT EXISTS   create_table_sql="create table IF NOT EXISTS   test01  (id  int  PRIMARY key auto_increment  ,  file_id   varchar(128), msg_id    varchar(64) ,register_id varchar(64), push_time    datetime )"
+  (id  int  PRIMARY key auto_increment  ,  file_id   varchar(128), msg_id    varchar(64) ,register_id varchar(64), push_time    datetime )"
+mysql -h${HOSTNAME} -P${PORT} -u${USERNAME} -p${PASSWORD} ${DBNAME} -e "${create_table_sql}"
+
+###把数据插入数据库:
+echo -e   >>  $FILENAME
+cat   $FILENAME | while read LINE
+do
+echo $LINE
+insert_sql="INSERT INTO ${TBNAME01}   VALUES (NULL, '$file_id','$msg_id','$register_id', '$push_time')"
+mysql -h${HOSTNAME} -P${PORT} -u${USERNAME} -p${PASSWORD} ${DBNAME} -e "${insert_sql}"
+done

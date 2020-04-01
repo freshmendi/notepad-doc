@@ -1,0 +1,63 @@
+ vim config/config.json
+ {
+  "appName": "elastalert-server",
+  "port": 3030,
+  "wsport": 3333,
+  "elastalertPath": "/opt/elastalert",
+  "verbose": false,
+  "es_debug": false,
+  "debug": false,
+  "rulesPath": {    #规则配置文件存放目录
+    "relative": true,
+    "path": "/rules"
+  },
+  "templatesPath": {
+    "relative": true,
+    "path": "/rule_templates"
+  },
+  "es_host": "192.168.25.122",    #es host
+  "es_port": 9200,
+  "es_username": elastic,
+  "es_password": changeme,
+  "writeback_index": "elastalert_status"
+}
+
+
+$ grep "^[^#]" config/elastalert.yaml 
+es_host: 192.168.25.122
+es_port: 9200
+es_username: elastic
+es_password: changeme
+use_ssl: false
+verify_certs: false
+rules_folder: rules   #配置文件目录
+run_every:            #全局配置，多久执行一次配置文件
+  seconds: 30
+buffer_time:          #全局配置
+  minutes: 1
+writeback_index: elastalert_status   #查询匹配到的信息存放的索引名称
+alert_time_limit:
+  days: 2
+  
+docker run -d -p 3030:3030  -v `pwd`/config/elastalert.yaml:/opt/elastalert/config.yaml  -v `pwd`/config/config.json:/opt/elastalert-server/config/config.json \
+-v `pwd`/rules:/opt/elastalert/rules  \
+-v `pwd`/rule_templates:/opt/elastalert/rule_templates \
+-v `pwd`/server_data:/opt/elastalert/server_data \
+-v `pwd`/logs:/opt/logs \
+--net=host --name elastalert elastalert:latest
+
+
+
+
+docker run -d -p 3030:3030 \
+    -v `pwd`/config/elastalert.yaml:/opt/elastalert/config.yaml \
+    -v `pwd`/config/config.json:/opt/elastalert-server/config/config.json \
+    -v `pwd`/rules:/opt/elastalert/rules \
+    -v `pwd`/rule_templates:/opt/elastalert/rule_templates \
+    --net="host" \
+    --name elastalert bitsensor/elastalert:latest
+	
+	
+	
+   
+   

@@ -1,0 +1,49 @@
+#!/bin/bash
+SYSDATE=$(date +%F)
+###goldba服务器脚本
+
+appapi=/data/goldbag/appapi/logs/appapi.$SYSDATE.log
+
+mgrapi=/data/goldbag/mgrapi/logs/mgrapi.$SYSDATE.log
+
+bankapi=/data/goldbag/bankapi/logs/bankapi.log
+
+manageservice=/data/goldbag/manageservice/logs/manageservice.$SYSDATE.log
+
+orderservice=/data/goldbag/orderservice/logs/orderservice.$SYSDATE.log
+
+currentservice=/data/goldbag/currentservice/logs/currentservice.$SYSDATE.log
+
+scheduleservice=/data/goldbag/scheduleservice/logs/scheduleservice.$SYSDATE.log
+
+payservice=/data/goldbag/payservice/logs/payservice.$SYSDATE.log
+
+allinpay=/data/goldbag/allinpay/logs/allinpay.$SYSDATE.log
+          
+metis=/data/goldbag/metis/logs/metis.$SYSDATE.log
+          
+###61.129 metis服务器脚本  
+        
+##metis=/data/count/metis/logs/metis.$SYSDATE.log
+             
+#appmetisapppi=/data/count/metisApp/logs/metisappservice.$SYSDATE.log
+
+logpath=($appapi $mgrapi $bankapi $manageservice $orderservice $currentservice $scheduleservice $payservice $allinpay $metis)
+
+echo  ${logpath[*]}  
+echo  ${logpath[2]} 
+goldbagerror=$(egrep  -i  -m  1  'GR999999|GR999999|initionRegistryPostProcessor|AsyncResolver-bootstrap-executor-0'   ${logpath[*]})
+
+
+
+echo  $goldbagerror
+echo  $SYSDATE
+
+if [ "$goldbagerror" = "" ]
+then
+        echo "0"
+else
+        echo "1"
+
+fi
+

@@ -1,0 +1,86 @@
+re --- 正则表达式操作 — Python 3.8.1 文档
+https://docs.python.org/zh-cn/3/library/re.html
+
+
+【Python】python库之（math库）_AllenKai的博客-CSDN博客
+https://blog.csdn.net/zkzbhh/article/details/78384180
+
+math库中包含了数学公式，我们可以通过用math库求表达式的值
+首先导入math库（两种方法）：
+
+import math
+
+from math import x #x表示math库中方法
+
+
+
+Windows 10安装Linux子系统(WSL)时遇到的问题及解决_Linux教程_Linux公社-Linux系统门户网站
+https://www.linuxidc.com/Linux/2019-05/158611.htm
+
+
+(3条消息)Windows 10 下进行Linux shell脚本开发环境搭建_三米学习笔记杂货铺-CSDN博客
+https://blog.csdn.net/maizi1045/article/details/80596372
+
+
+(3条消息)Windows 10 下进行Linux shell脚本开发环境搭建_三米学习笔记杂货铺-CSDN博客
+https://blog.csdn.net/maizi1045/article/details/80596372
+
+
+
+Sublime text 3 汉化 破解版 分享 - 简书
+https://www.jianshu.com/p/edeee16cdea1
+
+
+Sublime text 3 设置汇总 - 简书
+https://www.jianshu.com/p/b90fc7a0bd2d
+Release v1.3.14 · cmderdev/cmder · GitHub
+https://github.com/cmderdev/cmder/releases/tag/v1.3.14
+cmder使用简介 - 放飞的回忆 - 博客园
+https://www.cnblogs.com/ziyoublog/p/10416684.html
+
+
+(3条消息)ubuntu 推荐安装有用小工具_weixin_34174105的博客-CSDN博客
+https://blog.csdn.net/weixin_34174105/article/details/89627710
+
+configure: error: no acceptable C compiler found in $PATH 问题解决_gcc_duguduchong的专栏-CSDN博客
+https://blog.csdn.net/duguduchong/article/details/8699774
+
+ yum install gcc
+ 
+ 
+ (3条消息)Ubuntu下gcc安装及使用_lucifa_li的博客-CSDN博客
+https://blog.csdn.net/lucifa_li/article/details/79483686
+
+如何在Ubuntu 18.04上安装GCC编译器_com$
+http://www.sohu.com/a/320513801_495675
+
+
+(3条消息)linux中json处理工具jq的安装和使用_shell,linux,json_dongxingyan1的博客-CSDN博客
+https://blog.csdn.net/dongxingyan1/article/details/78902624
+
+
+apt-get install jq
+
+
+(3条消息)通过微软商店软件安装kali Linux子系统及图形界面_qq_41086293的博客-CSDN博客
+https://blog.csdn.net/qq_41086293/article/details/83928320
+
+
+(3条消息)使用Cmder替换cmd，让开发更高效_HELLO WORLD-CSDN博客
+https://blog.csdn.net/bigbear00007/article/details/91368434
+
+
+
+手把手教你用owncloud搭建属于自己的云盘 - 简书
+https://www.jianshu.com/p/6e0be77b688e
+
+
+IT之家学院：教你搭建OwnCloud私有网盘教程
+https://m.ithome.com/html/407195.html/407195
+
+
+(3条消息)win10 挂载NFS（网络文件夹）_雄二说-CSDN博客
+https://blog.csdn.net/qq_34158598/article/details/81976063
+
+
+

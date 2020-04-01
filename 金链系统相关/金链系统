@@ -1,0 +1,52 @@
+一．访问方式：
+
+
+
+碳链参考测试链接：
+https://fgoldchain.3ycloud.com   用户名：18630003005  密码： 12345
+二．统一测试平台：	
+
+https://tgoldchain.goldenlinker.com
+https://fgoldchain.3ycloud.com
+
+用户名：18630003005  密码： 12345
+金链的测试平台：
+https://fgoldchain.3ycloud.com
+用户名：18630003005  密码： 12345
+
+
+echo  "192.168.66.137 tlogin.goldenlinker.com"  >>  /etc/hosts
+echo  "192.168.66.137 tdisconf.goldenlinker.com" >>  /etc/hosts
+echo  "192.168.66.137  tgoldchain.api.goldenlinker.com" >>  /etc/hosts
+echo  "192.168.66.137  tucenter.goldenlinker.com" >>  /etc/hosts
+echo  "192.168.66.137  tpagedesign.goldenlinker.com" >>  /etc/hosts
+echo  "192.168.66.137  tcoconfig.goldenlinker.com" >>  /etc/hosts
+echo  "192.168.66.137  tgoldchain.goldenlinker.com" >>  /etc/hosts
+echo  "192.168.66.137  tsmc.goldenlinker.com"  >>  /etc/hosts
+
+域名解析：
+
+
+192.168.66.137 tapi.goldenlinker.com                
+192.168.66.137  tcoconfig.goldenlinker.com      
+192.168.66.137 tgoldchain.goldenlinker.com
+192.168.66.137 tgoldchain.api.goldenlinker.com
+192.168.66.137 tlogin.goldenlinker.com
+192.168.66.137 tpagedesign.goldenlinker.com
+192.168.66.137 ttransfer.goldenlinker.com
+192.168.66.137 tsmc.goldenlinker.com
+192.168.66.137 tucenter.goldenlinker.com 
+192.168.66.137 disconf.bangfin.com
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,27 @@
+es_host: 192.168.25.122  
+es_port: 9200
+es_username: elastic
+es_password: changeme
+name: autoDispatchAdvanceJob Stop  
+type: flatline  
+index: pmc-timejob 
+threshold: 1  
+timeframe:                                                                                                                                 
+  minutes: 35  
+filter:                                                                                                                                     
+- query:                                                                                                                                   
+    query_string:  
+      query: "autoDispatchAdvanceJob"                                                                                                                                                                                                                                          
+alert:     
+- "email"                                                                                                                                                                                                                                                                     
+smtp_host: smtp.163.com                                                                                                                     
+smtp_port: 25                                                                                                                             
+smtp_auth_file: /usr/local/elastalert/simple-file.yaml  
+email_reply_to: "jinlianrongtong@163.com"                                                                                                                                                                                                                                 
+from_addr: "jinlianrongtong@163.com"
+email:  
+- "1142040298@qq.com"
+- "2354452336@qq.com"
+
+
+python -m elastalert.elastalert --config /usr/local/elastalert/config.yaml --verbose

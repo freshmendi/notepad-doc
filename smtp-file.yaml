@@ -1,0 +1,4 @@
+#发送邮件的邮箱
+user: "jinlianrongtong@163.com"
+##不是邮箱密码，是设置的POP3密码
+password: "2019jlrt"

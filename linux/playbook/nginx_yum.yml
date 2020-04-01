@@ -1,0 +1,35 @@
+hosts: web
+vars:
+hello: ansible
+tasks:
+name: add repo
+yum_repository:
+name: nginx
+description: nginx repo
+baseurl: http://nginx.org/packages/centos/7/$basearch/
+gpgcheck: no
+enabled: 1
+name: install centos plungins
+shell: yum -y install zlib zlib-devel openssl openssl-devel pcre-devel wget gcc gcc++ autoconf automake
+
+name: install nginx
+yum:
+name: nginx
+state: latest
+
+name: copy nginx configuration file
+copy:
+src: /opt/ansible-yaml/site.conf
+dest: /etc/nginx/conf.d/site.conf
+
+name: create wwwroot directory
+file:
+dest: /var/www/html
+state: directory
+name: create test page index.html
+shell: echo "hello {{hello}}" > /var/www/html/index.html
+
+name: start nginx
+service:
+name: nginx
+state: started

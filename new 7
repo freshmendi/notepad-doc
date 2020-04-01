@@ -1,0 +1,56 @@
+pipeline {
+    agent any
+    stages {
+        stage('build') {
+            steps {
+
+                sh  '/usr/local/maven/apache-maven-3.6.2/bin/mvn package'
+            }
+        }
+   
+        stage('cpToCentrol') {
+            steps {
+
+                sh  '/data/publish/vms/versionservice/scripts/cpToCentrol.sh'
+
+            }
+        }
+        stage('depolyToDev') {
+            steps {
+
+                sh  '/data/publish/vms/versionservice/scripts/depolyToDev.sh'
+
+            }
+        }
+		
+	 }
+}
+
+"http://devcms.aldingmall.cn",
+
+
+pipeline {
+    agent any
+    stages {
+        stage('build') {
+            steps {
+
+                sh  '/usr/local/apache-maven-3.6.1/bin/mvn package'
+            }
+        }
+        stage('cpToCentroll') {
+            steps {
+
+                sh  '/data/publish/vms/versionservice/cpToCentroll.sh'
+
+            }
+        }
+        stage('depolyToDev') {
+            steps {
+
+                sh  '/data/publish/vms/versionservice/depolyToDev.sh'
+
+            }
+        }
+    }
+}

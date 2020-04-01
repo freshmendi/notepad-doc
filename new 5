@@ -1,0 +1,14 @@
+#!/bin/sh
+i=1
+SUM=`sed -n '$=' /data/scripts/2019-09-19/激活未注册/2019-09-19-1_uniq.txt` #计算文件的总行数
+echo "$SUM"
+while read line
+do
+    arr[$i]="$line"
+    i=`expr $i + 1`
+done <  /data/scripts/2019-09-19/激活未注册/2019-09-19-1_uniq.txt
+echo "$i"
+i=1
+for i in `seq $SUM` ;do 
+    echo "${arr[$i]}"
+done

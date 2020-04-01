@@ -1,0 +1,59 @@
+
+
+
+
+
+极光测试账号： 
+1142040298@qq.com
+密码： 1qaz@WSX
+
+测试registeid：
+安卓设备：
+
+测试设备ID：160a3797c86913cf9aa
+
+苹果设备:
+1104a89792d42a1f817
+
+AppKey : ffe20d137d680973f9044fac
+Master Secret:99e8337a34a6f1487fcd7ff0
+
+
+
+
+
+
+生产环境的信息查看：
+
+应用黄金象：
+
+AppKey: e1992eef505e91633b20e3fe
+Master Secret： 25c5b1326fb57d894ea20cb2 
+测试一个消息Id:
+38280635985211223
+
+示例获取mesgid的详细信息：
+
+curl -v https://report.jpush.cn/v3/received?msg_ids=38280635985211223 -u "e1992eef505e91633b20e3fe:25c5b1326fb57d894ea20cb2"
+curl -v https://report.jpush.cn/v3/received/detail?msg_ids=38280635985211223 -u "e1992eef505e91633b20e3fe:25c5b1326fb57d894ea20cb2"
+
+[{"android_pns_sent":11994,
+"ios_apns_received":482,
+"ios_apns_sent":70902,
+"ios_msg_received":null,
+"jpush_received":8,
+"msg_id":"38280635985211223",
+"wp_mpns_sent":null}]
+
+curl --insecure -X POST -v https://report.jpush.cn/v3/status/message -H "Content-Type: application/json" -u "e1992eef505e91633b20e3fe:25c5b1326fb57d894ea20cb2" -d '{ "msg_id": 38280635985211223, "registration_ids":["1506bfd3a7c568d4761", "02078f0f1b8", "0207870a9b8"]}'
+
+curl -v https://report.jpush.cn/v3/messages/detail?msg_ids=38280635985211223  -u "e1992eef505e91633b20e3fe:25c5b1326fb57d894ea20cb2"
+
+curl -v "https://report.jpush.cn/v3/users?time_unit=DAY&start=2019-06-10&duration=3" -u "e1992eef505e91633b20e3fe:25c5b1326fb57d894ea20cb2"
+
+
+
+
+
+
+                                                                                                                                                       

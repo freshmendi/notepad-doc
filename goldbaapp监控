@@ -1,0 +1,22 @@
+
+#!/bin/bash
+SYSDATE=$(date +%F)
+#logpathh=/data/mall/content/storages/logs/error-$SYSDATE.log
+logpath=/data/mall/content/storages/logs/error-$SYSDATE.log
+
+if [ -f "$logpath" ]
+then
+##ecjiaerror=$(egrep   'CURL Error|Server unreachable'   $logpath )
+ecjiaerror=$(egrep  -i  -m  1  'CURL Error|Server unreachable'   $logpath)
+
+#echo  $ecjiaerror
+#echo  $SYSDATE
+if [ "$ecjiaerror" = "" ]
+then
+        echo "0"
+else
+        echo "1"
+fi
+else
+        echo "0"
+fi

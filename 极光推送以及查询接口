@@ -1,0 +1,151 @@
+curl --insecure -X POST -v https://api.jpush.cn/v3/push   -H "Content-Type: application/json" -u "ffe20d137d680973f9044fac:99e8337a34a6f1487fcd7ff0"   -d
+ '{
+         "platform" : ["android", "ios"],
+         "audience" : {
+        "registration_id" : [ "160a3797c86913cf9aa", "160a3797c86913cf9aa" ]
+    },
+        "notification": {
+        "android": {
+            "alert": "金价波动不要慌，小象补贴已到账~点击查看优惠券>>",
+            "title": "",
+            "builder_id": 1,
+                        "uri_activity": "com.tunnel.plugin.JPushReceiveActivity",
+                        "uri_action": "com.tunnel.plugin.JPushReceiveActivity",
+            "intent": {
+                "url": "intent:#Intent;component=com.jiguang.push/com.example.jpushdemo.SettingActivity;end",
+            },
+            "extras": {
+                      "jump_path" : "/my/coupon" 
+            }
+        },
+        "ios": {
+            "alert": "金价波动不要慌，小象补贴已到账~点击查看优惠券>>",
+            "title": "",
+                        ”mutable-content":true,
+            "extras": {
+                      "jump_path" : "/my/coupon" 
+
+            }
+        }
+    }
+}'
+	
+
+
+url --insecure -X POST -v https://api.jpush.cn/v3/push   -H "Content-Type: application/json" -u "ffe20d137d680973f9044fac:99e8337a34a6f1487fcd7ff0"   -d '{
+         "platform" : ["android", "ios"],
+         "audience" : {
+        "registration_id" : [ "160a3797c86913cf9aa", "160a3797c86913cf9aa" ]
+    },
+        "notification": {
+        "android": {
+            "alert": "金价波动不要慌，小象补贴已到账~点击查看优惠券>>",
+            "title": "111",
+            "uri_activity": "com.tunnel.plugin.JPushReceiveActivity",
+            "uri_action": "com.tunnel.plugin.JPushReceiveActivity",
+            "extras": {
+                      "jump_path" : "/my/coupon" 
+            }
+        },
+		
+    }
+}'
+
+	
+	
+
+
+
+
+
+
+
+
+
+根据message获取推送情况信息：
+
+
+curl -v https://report.jpush.cn/v3/received?msg_ids=2251829134755311  -u "ffe20d137d680973f9044fac:99e8337a34a6f1487fcd7ff0"
+
+
+curl --insecure -X  GET -v  https://api.jpush.cn/v3/schedules?page=  -u "ffe20d137d680973f9044fac:99e8337a34a6f1487fcd7ff0"
+#####获取所有的schedal信息：
+
+curl --insecure -X  GET -v  https://api.jpush.cn/v3/schedules?page=  -u "ffe20d137d680973f9044fac:99e8337a34a6f1487fcd7ff0"
+
+#####获取具体某个scheid的信息：
+curl --insecure -X  GET -v  https://api.jpush.cn/v3/schedules/{49e100a9-d91c-11e9-962f-fa163e74a8d9}  -u "ffe20d137d680973f9044fac:99e8337a34a6f1487fcd7ff0" 
+
+
+####直送schedualserver信息：
+curl --insecure -X POST -v https://api.jpush.cn/v3/schedules  -H "Content-Type: application/json" -u "ffe20d137d680973f9044fac:99e8337a34a6f1487fcd7ff0"  -d '{
+ "name": "test", 
+ "enabled": true, 
+ "trigger": { 
+     "periodical": { 
+       "start":"2019-09-17 12:00:00", 
+       "end": "2019-10-18 12:00:00", 
+       "time": "15:19:00", 
+       "time_unit": "day",
+       "frequency": 2
+     }
+  },
+ "push": {
+     "platform": "all",
+     "audience": "all", 
+     "notification": {
+          "ios": {
+              "alert":"this a test",
+              "sound":"default",
+              "badge":"+1"
+           }
+      },
+     "message": {}, 
+     "options": {"apns_production":"false"}
+  } 
+}'
+
+
+curl -v https://report.jpush.cn/v3/received/detail?msg_ids=20266242775635666 -u "ffe20d137d680973f9044fac:99e8337a34a6f1487fcd7ff0"
+
+curl --insecure -X POST -v https://report.jpush.cn/v3/status/message -H "Content-Type: application/json" -u "ffe20d137d680973f9044fac:99e8337a34a6f1487fcd7ff0" -d '{ "msg_id": 2251829134755311 , "registration_ids":["1104a89792d42a1f817", "160a3797c866e73e553"]}'
+
+status 含义：
+
+0: 送达；
+1: 未送达；
+2: registration_id 不属于该应用；
+3: registration_id 属于该应用，但不是该条 message 的推送目标；
+4: 系统异常。
+
+
+
+
+###定时发送接口
+
+curl --insecure -X POST -v https://api.jpush.cn/v3/push -H "Content-Type: application/json" -u "ffe20d137d680973f9044fac:99e8337a34a6f1487fcd7ff0"  -d '{
+ "name": "定时推送示例", 
+ "enabled": true, 
+ "trigger": { 
+     "periodical": { 
+       "start":"2019-09-17 12:00:00", 
+       "end": "2020-10-18 12:00:00", 
+       "time": "15:19:00", 
+       "time_unit": "day", //month, week, day；大小写不敏感 
+       "frequency": 2
+     }
+  },
+ "push": {
+     "platform": "all",
+     "audience": "all", 
+     "notification": {
+          "ios": {
+              "alert":"this a test",
+              "sound":"default",
+              "badge":"+1"
+           }
+      },
+     "message": {}, 
+     "options": {"apns_production":"false"}
+  } 
+}

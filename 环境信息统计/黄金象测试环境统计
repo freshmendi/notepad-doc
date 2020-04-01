@@ -1,0 +1,65 @@
+''' 黄金象相关配置信息'''
+第一部分： 黄金象的goldbag，ecjia，cms以及metis程序：部署在  192.168.25.75
+
+IP地址：192.168.25.75    root  密码：  test@2019
+___________________
+黄金象的程序目录:
+/data/ecjia
+/data/cms
+/data/count  metis统计功能
+/data/goldbag
+/data/app
+/data/update  自动更新
+/data/outapp    站外活动
+/data/website  黄金象官网（node程序:默认node端口3000）
+nginx配置文件位置：
+/etc/nginx/conf.d
+
+黄金象app首页：testapp.goldrock.cn
+黄金象官网：testwww.goldrock.cn
+站外活动地址示例测试链接：http://testactive.goldrock.cn/dist/201812/newbie.html
+自动更新地址：http://testupdate.goldrock.cn/lastest/#/
+ecjia地址：
+前端：http://testmall.goldrock.cn/
+后台：http://testmall.goldrock.cn:10080/index.php?m=admincp&c=privilege&a=login
+cms：
+前端：http://testcms.goldrock.cn
+
+管理后台地址：
+管理后台地址：http://testadmin.goldrock.cn/#/login
+__________________________________________________________________________________________________
+51黄金的程序目录:
+/data/51hj
+/data/51hj/www  51黄金官网       访问方式： http://testwww.51huangjin.com.cn/
+/data/51hj/update    自动更新地址    访问方式：http://testupdate.51huangjin.com.cn/lastest/#/
+/data/51hj/update/lastest  51黄金app地址 访问方式：http://testapp.51huangjin.com.cn
+
+
+第二部分：oracle数据库部分:数据库：192.168.25.59    主机的root密码：    test@2019
+
+metis  数据库：  metis  密码：  123456
+goldbag  数据库:  gold001  密码：  123456
+
+
+第三部分：对应的appversion版本管理：
+
+http://192.168.25.80/#/login
+
+主机的root密码：  test@2019
+
+程序部署目录：  /data/appversion
+
+mysql数据库的账号密码：root  密码：cshj
+
+第四部分：阿拉盯程序所在主机： 192.168.25.73
+IP地址：192.168.25.75    root  密码：  test@2019
+程序目录：
+/data/testald
+/data/testald/update
+/data/testald/cms docker方式启动
+
+
+
+
+gnocchi/  glance/  nova/ neutron/   keystone/   openstack-dashboard/
+

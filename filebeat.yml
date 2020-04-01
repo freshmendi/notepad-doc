@@ -1,0 +1,29 @@
+- input_type: log
+  # Paths that should be crawled and fetched. Glob based paths.
+  paths:
+    - /var/log/nginx/*.log*
+ # document_type: nginx2575
+  tags: ["nginx"]
+#  multiline.pattern: '^[0-9]{4}\-[0-9]{2}\-[0-9]{2}'
+#  multiline.negate: true
+#  multiline.match: before 
+- input_type: log
+  paths:
+    - /data/goldbag/alipay/logs/*.log
+    - /data/goldbag/allinpay/logs/*.log
+    - /data/goldbag/appapi/logs/*.log
+    - /data/goldbag/balanceservice/logs/*.log
+    - /data/goldbag/bankapi/logs/*.log
+    - /data/goldbag/currentservice/logs/*.log
+    - /data/goldbag/ecjiaservice/logs/*.log
+    - /data/goldbag/manageservice/logs/*.log
+    - /data/goldbag/mgrapi/logs/*.log
+    - /data/goldbag/orderservice/logs/*.log
+    - /data/goldbag/payservice/logs/*.log
+    - /data/goldbag/recycleservice/logs/*.log
+    - /data/goldbag/registration/logs/*.log
+    - /data/goldbag/riskservice/logs/*.log
+    - /data/goldbag/scheduleservice/logs/*.log
+    - /data/goldbag/sessionservice/logs/*.log
+  tags: ["goldbag"]
+ 

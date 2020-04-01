@@ -1,0 +1,19 @@
+ ,result where  record.msg_id=result.msg_id
+ /usr/share/nginx/html/jpush
+ 
+ select    A.push_time as 发送时间,   B.look_time  结果查看时间  ,  A.dir AS 类别,A.file AS  registerId文件,   A.title  AS  推送标题,  A.content  AS  registerId文件, B.ios_apns_target AS  ios目标 ,B.ios_apns_sent AS ios成功 , B.jpush_target AS 极光通道目标 ,B.jpush_online_push AS 极光通道成功 ,  B.android_pns_target  AS  厂商通道目标,B.android_pns_sent AS 厂商通道成功   from  $TBNAME01   A ,$TBNAME02  B where  A.msg_id =B.msg_id;
+ 
+ 
+ 
+ sh    mysql_read.sh    >  /usr/share/nginx/html/jpush/22.html/jpush
+ select *  from  (
+
+)  as c 
+ select msg_id from (select  msg_id , max(push_time) from  record    where  dir='激活未注册'  and  file='2020-01-09-1.txt'   and  push_time like  '%2020-01-09%' )   a
+ 
+ 
+ select msg_id from  (select  msg_id , max(push_time) from  record    where  dir='$dir'  and  file='$file'   and  push_time like  '%$SYSDATE%' )   a
+  select  msg_id  from  record     where   push_time=(select  max(push_time)  from  record    where  dir='激活未注册'  and  file='2020-01-09-1.txt'   and  push_time like  '%2020-01-09%'  ) 
+  
+  
+   select  msg_id  from  $TBNAME01     where   push_time=(select  max(push_time)  from  record    where  dir='$dir'  and  file='$file'   and  push_time like  '%$SYSDATE%'  ) 

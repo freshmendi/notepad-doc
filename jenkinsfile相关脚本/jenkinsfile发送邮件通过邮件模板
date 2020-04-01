@@ -1,0 +1,46 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('build') {
+            steps {
+
+                sh  '/usr/local/maven/apache-maven-3.6.2/bin/mvn package'
+				sh Version=`git rev-parse --short HEAD`
+				echo $Version
+            }
+
+        }
+        stage('cpToCentrol') {
+            steps {
+
+               sh  '/data/publish/vms/versionservice/scripts/cpToCentrol.sh'
+
+            }
+        }
+        stage('depolyToDev') {
+            steps {
+                input message: '升级到开发环境? (Click "Proceed" to continue,Click "终止" to exit)'
+                sh  '/data/publish/vms/versionservice/scripts/depolyToDev.sh'
+
+            }
+        }
+}
+       post{
+          always {
+                  emailext(             subject:'$PROJECT_NAME - Build # $BUILD_NUMBER - $BUILD_STATUS!',
+                                        to: "public@goldrock.cn;1142040298@qq.com",
+                                        body: '${FILE,path=".Jenkinsmail.html"}'  
+                  )                     
+                  
+                  
+                    }
+                    
+          }         
+          
+
+}
+ 
+ 
+ 
+

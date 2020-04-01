@@ -1,0 +1,48 @@
+case   $status in
+Rollback)
+     echo "status:$status"
+	 echo "Version:$Version"
+	 num_before==${BUILD_NUMBER}-1
+	 echo  $num_before
+	 file_before=ls  "${WORKSPACE}/dist/$Version/${num_before}"
+	 echo  '$file_before'
+    ;;
+    *)
+    exit
+esac
+
+
+
+
+
+
+
+Rollback)
+	echo "status:$status"
+	echo "Version:$Version"
+	num_before==${BUILD_NUMBER}-1
+	echo  $num_before
+	file_before=ls  "${WORKSPACE}/dist/$Version/${num_before}"
+	echo  "$file_before"
+    ;;
+    *)
+	
+	
+
+
+
+	
+Rollback)
+     echo "status:$status"
+	 echo "Version:$Version"
+	 
+	 Rollback)
+     echo "status:$status"
+	 echo "Version:$Version"
+	 
+	 
+	 
+export MAVEN_HOME=/usr/local/apache-maven-3.6.1
+export MAVEN_HOME
+export PATH=$PATH:$MAVEN_HOME/bin
+

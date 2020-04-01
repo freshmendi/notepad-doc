@@ -1,0 +1,68 @@
+{
+    "platform": [ "android" , "ios" ]
+"notification": {
+        "android": {
+            "alert": "Hi, JPush!",
+            "title": "Send to Android",
+            "builder_id": 1,
+            "large_icon": "http://www.jiguang.cn/largeIcon.jpg",
+            "intent": {
+                "url": "intent:#Intent;component=com.jiguang.push/com.example.jpushdemo.SettingActivity;end",
+            },
+            "extras": {
+                "newsid": 321
+            }
+        },
+        "ios": {
+            "alert": "Hi, JPush!",
+            "sound": "default",
+            "badge": "+1",
+            "thread-id": "default"
+            "extras": {
+                "newsid": 321
+            }
+        }
+    },
+    "options": {
+        "time_to_live": 60,
+        "apns_production": false,
+        "apns_collapse_id":"jiguang_test_201706011100"
+    }
+	
+	
+
+
+
+{
+         "platform" :  [ "android" , "ios" ],
+         "audience" : {
+        "registration_id" : [ "'"$registerId"'" ]
+    },
+        "notification": {
+        "android": {
+            "alert":"'"$title_jhwzc01"' ",
+            "title": ""
+            },
+        "ios": {
+            "alert": "Hi, JPush!",
+            "sound": "default",
+            "badge": "+1",
+            "thread-id": "default"
+        }
+        },
+    "message": {
+        "msg_content": "Hi,JPush",
+        "content_type": "text",
+        "title": "msg"
+        },
+    "options": {
+        "apns_production": true
+    }
+}
+'
+查看有效文件列表：
+
+
+curl -X GET -u "e1992eef505e91633b20e3fe:25c5b1326fb57d894ea20cb2" https://api.jpush.cn/v3/files
+
+
