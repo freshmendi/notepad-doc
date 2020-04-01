@@ -11,14 +11,3 @@
   roles:
 
     - nginx
-- name: copy nginx_tar_gz to client
-
-  copy: src=/data/scripts/playbook/nginx/roles/files/nginx-1.13.8.tar.gz dest=/tmp/nginx-1.13.8.tar.gz
-
-- name: copy install_shell to client
-
-  copy: src=/data/scripts/playbook/nginx/roles/files/install_nginx.sh dest=/tmp/install_nginx.sh
-
-- name: install nginx
-
-  shell: /bin/bash /tmp/install_nginx.sh
