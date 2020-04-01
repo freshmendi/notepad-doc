@@ -21,4 +21,4 @@
 
 - name: install nginx
 
-  shell: /bin/bash /tmp/install_nginx.sh
+  shell: /bin/bash 
