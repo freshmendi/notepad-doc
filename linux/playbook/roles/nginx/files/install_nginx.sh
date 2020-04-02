@@ -26,7 +26,7 @@ mkdir /var/nginx
 
 mkdir /var/log/nginx/
 
- 
+
 
 #解压nginx----------------------------------------------------------------------
 
@@ -42,8 +42,8 @@ cd nginx-1.13.8
 
 #编译nginx 并配置需要安装的模块，编译后可通过nginx -V查看----------------------------------------------------------------------
 
-./configure --with-http_ssl_module  --with-http_stub_status_module --with-http_flv_module --with-http_gzip_static_module
 
+./configure --with-http_ssl_module --with-http_stub_status_module --with-http_flv_module --with-http_gzip_static_module --prefix=/usr/local/nginx
 #google 内存优化 一般用不到
 
 #--with-google_perftools_module
@@ -71,13 +71,7 @@ cd nginx-1.13.8
 #文件压缩模块
 
 #--with-http_gzip_static_module
-
- 
-
 make && make install
-
- 
-
 #修改 /usr/local/nginx/conf/nginx.conf----------------------------------------------------------------------
 
 cat > /usr/local/nginx/conf/nginx.conf <<EOF
