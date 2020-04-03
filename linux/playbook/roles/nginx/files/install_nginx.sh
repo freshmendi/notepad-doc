@@ -8,7 +8,7 @@
 yum -y install gcc gcc-c++ autoconf automake make
 yum -y install zlib zlib-devel openssl openssl-devel pcre pcre-devel
  
- 
+
 #创建nginx 日志文件夹----------------------------------------------------------------------
 mkdir /var/nginx
 mkdir /var/log/nginx/
@@ -48,8 +48,7 @@ events {
    multi_accept on;
    use epoll;
 }
- 
- 
+
 #http(http设置)----------------------------------------------------------------------
 http {
    server_tokens on;
@@ -93,9 +92,7 @@ http {
    open_file_cache max=100000 inactive=20s;
    open_file_cache_valid 30s;
    open_file_cache_min_uses 2;
- 
- 
- 
+
 #server(主机设置)----------------------------------------------------------------------
 server {
    listen       80;
