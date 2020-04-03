@@ -29,8 +29,8 @@ cd nginx-1.13.8
 #在nginx.conf的server块中添加如下代码
 #通过 curl 127.0.0.1/nginx_status访问
 #location /nginx_status {
-#    stub_status on;
-#    access_log   off;
+# stub_status on;
+# access_log   off;
 #}
 #文件压缩模块
 #--with-http_gzip_static_module
@@ -44,63 +44,63 @@ worker_processes 1;
 worker_rlimit_nofile 100000;
 #events(nginx工作模式)
 events {
-   worker_connections 2048;
-   multi_accept on;
-   use epoll;
+worker_connections 2048;
+multi_accept on;
+use epoll;
 }
 
 #http(http设置)----------------------------------------------------------------------
 http {
-   server_tokens on;
+server_tokens on;
 #如果出现206错误 修改sendfile 为off
-   sendfile on;
+sendfile on;
 #以下2条纺织网络堵塞
-   tcp_nopush on;
-   tcp_nodelay on;
-   log_format  main  '\$remote_addr - \$remote_user [\$time_local] "\$request" '
-                      '\$status \$body_bytes_sent "\$http_referer" '
-                      '"\$http_user_agent" "\$http_x_forwarded_for" "\$upstream_addr" "\$upstream_response_time"';
+tcp_nopush on;
+tcp_nodelay on;
+log_format  main  '\$remote_addr - \$remote_user [\$time_local] "\$request" '
+ '\$status \$body_bytes_sent "\$http_referer" '
+ '"\$http_user_agent" "\$http_x_forwarded_for" "\$upstream_addr" "\$upstream_response_time"';
  
 #access_log & error_log
-   access_log  /var/log/nginx/access.log  main;
-   error_log /var/log/nginx/error.log crit;
+access_log  /var/log/nginx/access.log  main;
+error_log /var/log/nginx/error.log crit;
  
 #上传文件大小100M
-   client_max_body_size 100m;
-   keepalive_timeout 60;
-   client_header_timeout 15;
+client_max_body_size 100m;
+keepalive_timeout 60;
+client_header_timeout 15;
 #502 get away时间
-   client_body_timeout 60;
-   reset_timedout_connection on;
-   send_timeout 25;
+client_body_timeout 60;
+reset_timedout_connection on;
+send_timeout 25;
  
-   limit_conn_zone \$binary_remote_addr zone=addr:5m;
-   limit_conn addr 100;
+limit_conn_zone \$binary_remote_addr zone=addr:5m;
+limit_conn addr 100;
  
-   include /usr/local/nginx/conf/mime.types;
-   default_type text/html;
-   charset UTF-8;
+include /usr/local/nginx/conf/mime.types;
+default_type text/html;
+charset UTF-8;
  
-   gzip on;
-   gzip_disable "msie6";
-   gzip_proxied any;
-   gzip_min_length 1000;
-   gzip_comp_level 6;
+gzip on;
+gzip_disable "msie6";
+gzip_proxied any;
+gzip_min_length 1000;
+gzip_comp_level 6;
 #压缩传输 但是会造成css等乱码
 #gzip_types text/plain text/css application/json application/x-javascript text/xml application/xml application/xml+rss text/javascript;
  
-   open_file_cache max=100000 inactive=20s;
-   open_file_cache_valid 30s;
-   open_file_cache_min_uses 2;
+open_file_cache max=100000 inactive=20s;
+open_file_cache_valid 30s;
+open_file_cache_min_uses 2;
 
 #server(主机设置)----------------------------------------------------------------------
 server {
-   listen       80;
-   server_name  ip;
+listen 80;
+server_name  ip;
  
 #location(url配置)----------------------------------------------------------------------
 location /nginx_status {
-   stub_status on;
+stub_status on;
 }
 }
 }
