@@ -106,6 +106,8 @@ server {
 location /nginx_status {
     stub_status on;
 }
+}
+}
 EOF
  
 
