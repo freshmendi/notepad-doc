@@ -42,15 +42,12 @@ user root;
 pid /var/run/nginx.pid;
 worker_processes 1;
 worker_rlimit_nofile 100000;
- 
 #events(nginx工作模式)
 events {
    worker_connections 2048;
    multi_accept on;
    use epoll;
 }
-
-
  
  
 #http(http设置)----------------------------------------------------------------------
@@ -119,7 +116,7 @@ sed -i '5a /usr/local/nginx/sbin/nginx  -c /usr/local/nginx/conf/nginx.conf' /e
 chmod +x /etc/rc.d/rc.local
  
 #将nginx添加到服务中----------------------------------------------------------------------
-cat >>/etc/init.d/nginx<<EOF
+cat >>/etc/init.d/nginx <<EOF
 #! /bin/bash
 # chkconfig: - 85 15
 PATH=/usr/local/nginx
