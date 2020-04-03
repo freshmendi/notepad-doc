@@ -165,7 +165,7 @@ exit 3
 esac
 exit 0
 EOF
- 
+
 chmod a+x /etc/init.d/nginx
 chkconfig --add nginx 
 chkconfig nginx on
