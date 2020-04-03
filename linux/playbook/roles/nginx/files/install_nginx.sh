@@ -198,61 +198,107 @@ location ~*\.(htm|html|js|css|less|json|gif|jpg|jpeg|png|bmp|swf|ioc|rar|zip|txt
 }
 #----------------------------------------------------------------------
 EOF
+
 #启动nginx 并把nginx 加入开机启动
 /usr/local/nginx/sbin/nginx  -c /usr/local/nginx/conf/nginx.conf
 sed -i '5a /usr/local/nginx/sbin/nginx  -c /usr/local/nginx/conf/nginx.conf' /etc/rc.d/rc.local
 chmod +x /etc/rc.d/rc.local
 #将nginx添加到服务中----------------------------------------------------------------------
 cat >>/etc/init.d/nginx<<EOF
-#! /bin/bash
+#!/bin/sh
+#
+#nginx - this script starts and stops the nginx daemin
+#
 # chkconfig: - 85 15
-PATH=/usr/local/nginx
-DESC="nginx "
-NAME=nginx
-DAEMON=\$PATH/sbin/\$NAME
-CONFIGFILE=\$PATH/conf/\$NAME.conf
-PIDFILE=\$PATH/logs/\$NAME.pid
-SCRIPTNAME=/etc/init.d/\$NAME
-set -e
-[ -x "\$DAEMON" ] || exit 0
-do_start() {
-\$DAEMON -c \$CONFIGFILE || echo -n "nginx already running"
+# description: Nginx is an HTTP(S) server, HTTP(S) reverse \
+# proxy and IMAP/POP3 proxy server
+# processname: nginx
+# config: /usr/local/nginx/conf/nginx.conf
+# pidfile: /usr/local/nginx/logs/nginx.pid
+# Source function library.
+. /etc/rc.d/init.d/functions
+# Source networking configuration.
+. /etc/sysconfig/network
+# Check that networking is up.
+[ "$NETWORKING" = "no" ] && exit 0
+nginx="/usr/local/nginx/sbin/nginx"
+prog=$(basename $nginx)
+NGINX_CONF_FILE="/usr/local/nginx/conf/nginx.conf"
+lockfile=/var/lock/subsys/nginx
+start() {
+[ -x $nginx ] || exit 5
+[ -f $NGINX_CONF_FILE ] || exit 6
+echo -n $"Starting $prog: "
+daemon $nginx -c $NGINX_CONF_FILE
+retval=$?
+echo
+[ $retval -eq 0 ] && touch $lockfile
+return $retval
 }
-do_stop() {
-\$DAEMON -s stop || echo -n "nginx not running"
+stop() {
+echo -n $"Stopping $prog: "
+killproc $prog -QUIT
+retval=$?
+echo
+[ $retval -eq 0 ] && rm -f $lockfile
+return $retval
 }
-do_reload() {
-\$DAEMON -s reload || echo -n "nginx can't reload"
+restart() {
+configtest || return $?
+stop
+start
 }
-case "\$1" in
+reload() {
+configtest || return $?
+echo -n $"Reloading $prog: "
+killproc $nginx -HUP
+RETVAL=$?
+echo
+}
+force_reload() {
+restart
+}
+configtest() {
+$nginx -t -c $NGINX_CONF_FILE
+}
+rh_status() {
+status $prog
+}
+rh_status_q() {
+rh_status >/dev/null 2>&1
+}
+case "$1" in
 start)
-echo -n "Starting \$DESC: \$NAME"
-do_start
-echo "."
+rh_status_q && exit 0
+$1
 ;;
 stop)
-echo -n "Stopping \$DESC: \$NAME"
-do_stop
-echo "."
+rh_status_q || exit 0
+$1
 ;;
-reload|graceful)
-echo -n "Reloading \$DESC configuration..."
-do_reload
-echo "."
+restart|configtest)
+$1
 ;;
-restart)
-echo -n "Restarting \$DESC: \$NAME"
-do_stop
-do_start
-echo "."
+reload)
+rh_status_q || exit 7
+$1
+;;
+force-reload)
+force_reload
+;;
+status)
+rh_status
+;;
+condrestart|try-restart)
+rh_status_q || exit 0
 ;;
 *)
-echo "Usage: \$SCRIPTNAME {start|stop|reload|restart}" >&2
-exit 3
-;;
+echo $"Usage: $0 {start|
+stop|status|restart|condrestart|try-restart|reload|force-reload|configtest}"
+exit 2
 esac
-exit 0
 EOF
+
 chmod a+x /etc/init.d/nginx
-chkconfig --add nginx
-chkconfig nginx on
+#chkconfig --add nginx
+#chkconfig nginx on
