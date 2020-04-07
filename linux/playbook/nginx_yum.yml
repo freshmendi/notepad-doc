@@ -1,10 +1,10 @@
 ---
 - hosts: web
-vars:
-hello: ansible
-tasks:
-- name: add repo
-yum_repository:
+  vars:
+  hello: ansible
+  tasks:
+  - name: add repo
+    yum_repository:
 name: nginx
 description: nginx repo
 baseurl: http://nginx.org/packages/centos/7/$basearch/
