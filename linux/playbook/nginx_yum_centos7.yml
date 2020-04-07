@@ -33,3 +33,7 @@
     service:
       name: nginx
       state: restarted
+  - name: chkconfig  nginx on
+    service:
+      name: nginx
+      enabled: yes
