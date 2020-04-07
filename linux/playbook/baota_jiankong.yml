@@ -8,4 +8,4 @@
   - name: wget  install.sh
     shell: cd   /tmp  && wget -O install.sh http://download.bt.cn/install/install.sh
   - name: install 执行文件 
-    shell: sh install.sh
+    shell: cd   /tmp   && sh install.sh
