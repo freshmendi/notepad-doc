@@ -19,8 +19,8 @@
 
   - name: copy nginx configuration file
     copy:
-      src: /opt/ansible-yaml/site.conf
-      dest: /etc/nginx/conf.d/site.conf
+      src: nginx.conf
+      dest: /etc/nginx/conf.d/nginx.conf
 
   - name: create wwwroot directory
     file:
