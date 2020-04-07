@@ -10,4 +10,4 @@
 
   roles:
 
-    - nginx
+    - nginx_make_install

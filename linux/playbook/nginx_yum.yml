@@ -1,4 +1,5 @@
-hosts: web
+---
+hosts: centos7
 vars:
 hello: ansible
 tasks:
