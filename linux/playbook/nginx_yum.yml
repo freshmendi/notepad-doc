@@ -5,12 +5,12 @@
   tasks:
   - name: add repo
     yum_repository:
-name: nginx
-description: nginx repo
-baseurl: http://nginx.org/packages/centos/7/$basearch/
-gpgcheck: no
-enabled: 1
-- name: install centos plungins
+    name: nginx
+    description: nginx repo
+    baseurl: http://nginx.org/packages/centos/7/$basearch/
+    gpgcheck: no
+    enabled: 1
+  - name: install centos plungins
 shell: yum -y install zlib zlib-devel openssl openssl-devel pcre-devel wget gcc gcc++ autoconf automake
 
 - name: install nginx
