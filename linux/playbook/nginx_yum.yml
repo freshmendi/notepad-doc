@@ -11,8 +11,7 @@
       gpgcheck: no
       enabled: 1
   - name: install centos plungins
-    shell: yum -y install zlib zlib-devel openssl openssl-devel pcre-devel wget gcc gcc++ autoconf automake
-
+    shell: yum -y install zlib zlib-devel openssl openssl-devel pcre-devel wget  gcc gcc-c++ kernel-devel autoconf automake
   - name: install nginx
     yum:
       name: nginx
