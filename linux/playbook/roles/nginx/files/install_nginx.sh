@@ -298,7 +298,6 @@ stop|status|restart|condrestart|try-restart|reload|force-reload|configtest}"
 exit 2
 esac
 EOF
-
 chmod a+x /etc/init.d/nginx
-#chkconfig --add nginx
-#chkconfig nginx on
+chkconfig --add nginx
+chkconfig nginx on
