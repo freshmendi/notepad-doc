@@ -32,10 +32,9 @@
 
   - name: start nginx
     service:
-<<<<<<< HEAD
+
     name: nginx
     state: started
-=======
       name: nginx
       state: started
->>>>>>> a4711b5a9142cb1fa0e8257947eb0be0d7b00b68
+
